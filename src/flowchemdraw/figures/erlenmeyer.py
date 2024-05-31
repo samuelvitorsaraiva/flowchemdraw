@@ -4,9 +4,12 @@ from flowchemdraw.utils import math
 from matplotlib.figure import Figure
 
 class erlenmeyer(components):
-    def __init__(self, ax: Figure, pos=(0.5, 0.5)):
 
-        super().__init__(ax=ax, position=pos, parent=self)
+    type_object = 'others'
+
+    def __init__(self, ax: Figure, pos: (float, float) = (0.5, 0.5), name: str = 'erlenmeyer'):
+
+        super().__init__(ax=ax, position=pos, type_object=erlenmeyer.type_object, name=name, parent=self)
 
         self.build()
 
@@ -42,3 +45,5 @@ class erlenmeyer(components):
             self.ax.plot(*math.xy(r / 20, phis, pos=(p[0] + r / 4, p[1] + 1.25 * r + r / 20)),
                          c='k',
                          ls='-')[0])
+
+        self._putname_(p[0], p[1] - 0.75 * r)

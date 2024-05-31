@@ -1,6 +1,7 @@
 import importlib
+import inspect
 
-def import_class(module_name, class_name):
+def import_class(module_name: str, class_name: str):
     try:
         module = importlib.import_module(module_name)
         return getattr(module, class_name)
@@ -10,3 +11,14 @@ def import_class(module_name, class_name):
     except AttributeError:
         print(f"Class {class_name} not found in module {module_name}.")
         return None
+
+
+def get_package_directory(package_name):
+    # Import the package
+    package = importlib.import_module(package_name)
+
+    # Get the file path of the package
+    package_dir = inspect.getfile(package)
+
+    # Return the directory
+    return package_dir

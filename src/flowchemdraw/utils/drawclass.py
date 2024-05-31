@@ -39,7 +39,7 @@ class drawobject:
 
 class components(drawobject):
 
-    def __init__(self, ax: Figure, position: (float, float), type_object: str = 'devices', parent=None):
+    def __init__(self, ax: Figure, position: (float, float), type_object: str = 'devices', name: str = '', parent=None):
 
         super().__init__(type_object, position=position)
 
@@ -54,6 +54,18 @@ class components(drawobject):
         self.parent = parent
 
         self.connection_points = [None]
+
+        self.name = name
+
+    def _putname_(self, x, y):
+
+        self.add_part(self.ax.text(self.position[0], self.position[1] - 1.5 * PATTERN_DIMENSION, self.name, fontsize=8,
+                                   bbox=dict(facecolor='red', alpha=0.25),
+                                   horizontalalignment='center'))
+
+    def _rename_(self, new):
+        self.name = new
+        self.set_position(new_pos=self.position)
 
     def set_position(self, new_pos: (float, float)) -> None:
         '''

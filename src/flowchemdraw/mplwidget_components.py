@@ -25,6 +25,8 @@ class mplwidget_components(FigureCanvas):
         self.axes.clear()
         self.axes.set_axis_off()
         dev = import_class('flowchemdraw.figures', name)
+        if dev == None:
+            dev = import_class('flowchemdraw.figures', 'undefined')
         dev(self.axes, pos=(1, 1))
         self.draw()
 

@@ -163,7 +163,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
           <attribute name="title">
            <string>Add</string>
           </attribute>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QVBoxLayout" name="verticalLayout_3">
            <property name="spacing">
             <number>0</number>
            </property>
@@ -180,7 +180,76 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="custom_listwidget" name="listWidget"/>
+            <widget class="custom_qtreewidget" name="treeWidget_add_devices">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <column>
+              <property name="text">
+               <string>Devices (flowchem)</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item>
+            <widget class="custom_qtreewidget" name="treeWidget_add_others">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="statusTip">
+              <string/>
+             </property>
+             <column>
+              <property name="text">
+               <string>Others items</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="title">
+              <string>Options</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_2">
+              <item>
+               <widget class="QRadioButton" name="radioButton_toml_available">
+                <property name="statusTip">
+                 <string>This option is required if there is a &quot;.toml&quot; file containing the configuration of the devices connected.</string>
+                </property>
+                <property name="text">
+                 <string>.toml file is available</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_toml_not_available">
+                <property name="statusTip">
+                 <string>This option is required if there is not a &quot;.toml&quot; file yet.</string>
+                </property>
+                <property name="text">
+                 <string>.toml file does not exist</string>
+                </property>
+                <property name="checkable">
+                 <bool>true</bool>
+                </property>
+                <property name="checked">
+                 <bool>false</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QRadioButton" name="radioButton_flowchem_running">
+                <property name="statusTip">
+                 <string>This option is required if the flowchem is already running in another console (API available)</string>
+                </property>
+                <property name="text">
+                 <string>flowchem is running</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
            <item>
             <widget class="mplwidget_components" name="widget_components" native="true">
@@ -255,9 +324,9 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>custom_listwidget</class>
-   <extends>QListWidget</extends>
-   <header location="global">custom_listwidget.h</header>
+   <class>custom_qtreewidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">custom_qtreewidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
