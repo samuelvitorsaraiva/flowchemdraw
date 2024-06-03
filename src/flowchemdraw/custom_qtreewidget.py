@@ -10,8 +10,17 @@ class custom_qtreewidget(QTreeWidget):
         self.Main_Window = None
 
     def build_qtree(self, components):
-        for c in components:
-            self.expandItem(QTreeWidgetItem(self, [c, 'Folder']))
+        self.clear()
+        for c in components.keys():
+            if components[c] == None:
+                self.expandItem(QTreeWidgetItem(self, [c, 'Folder']))
+            elif components[c]['components'] != None:
+                item = QTreeWidgetItem(self, [c, 'Folder'])
+                for key in components[c]['components'].keys():
+                    item.addChild(QTreeWidgetItem(item, [key, 'Folder']))
+                    self.expandItem(item)
+            else:
+                self.expandItem(QTreeWidgetItem(self, [c, 'Folder']))
 
     def mousePressEvent(self, event):
         self.item_clicked = self.itemAt(event.pos())

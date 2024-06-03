@@ -2,9 +2,9 @@
 
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
-    from undefined import undefined
+    from flowchemdraw.figures import *
     fig, ax = plt.subplots(figsize=(5, 5))
-    undefined(ax=ax)
+    syringe(ax=ax)
     ax.set_xlim(-2, 2)
     ax.set_ylim(-2, 2)
     #ax.grid(True)

@@ -238,16 +238,6 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
                 </property>
                </widget>
               </item>
-              <item>
-               <widget class="QRadioButton" name="radioButton_flowchem_running">
-                <property name="statusTip">
-                 <string>This option is required if the flowchem is already running in another console (API available)</string>
-                </property>
-                <property name="text">
-                 <string>flowchem is running</string>
-                </property>
-               </widget>
-              </item>
              </layout>
             </widget>
            </item>

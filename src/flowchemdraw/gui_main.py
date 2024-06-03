@@ -8,9 +8,9 @@ import os
 import pickle
 from flowchemdraw.utils.manage_class import import_class, get_package_directory
 from flowchemdraw.utils.drawclass import drawobject
-from flowchemdraw.utils.devices_flowchem import flowchem_devices, read_toml_file
+from flowchemdraw.utils.devices_flowchem import devices_flowchem
 
-from flowchemdraw.figures import __all__ as components
+from flowchemdraw.figures import __all__ as ilustrations
 
 adress = os.getcwd()
 
@@ -56,11 +56,17 @@ class main_widget(QMainWindow):
 
         self.components = dict()
 
-        self.treeWidget_add_others.build_qtree(components)
+        ilustratio_tree = dict()
+        for fig in ilustrations:
+            ilustratio_tree[fig] = None
+
+        self.treeWidget_add_others.build_qtree(ilustratio_tree)
 
         self.treeWidget_add_others.Main_Window = self
 
         self.treeWidget_add_devices.Main_Window = self
+
+        self.devices_flowchem = devices_flowchem()
 
     def add_new_item_Qtree(self, head, name):
         parent = QTreeWidgetItem(self.treeWidget_parents[head], [name, 'Folder'])
@@ -105,7 +111,10 @@ class main_widget(QMainWindow):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Delete:
-            self.remove_selected_item()
+            try:
+                self.remove_selected_item()
+            except:
+                pass
         else:
             super().keyPressEvent(event)
 
@@ -190,14 +199,19 @@ class main_widget(QMainWindow):
             name = QFileDialog.getOpenFileName(self, "Load flowchem (toml) file", dirctory_flowchem, "toml Files (*.toml)",
                                                options=option)
             if name[0]:
-                read_toml_file(name[0])
-            self.treeWidget_add_devices.setEnabled(False)
+                self.devices_flowchem.read_toml_file(name[0])
+            else:
+                return
+
         elif self.radioButton_toml_not_available.isChecked():
-            components = flowchem_devices()
-            self.treeWidget_add_devices.build_qtree(components)
-            self.treeWidget_add_devices.setEnabled(True)
-        else:
-            self.treeWidget_add_devices.setEnabled(False)
+
+            self.devices_flowchem.devices = self.devices_flowchem.all_devices_available
+
+
+        self.treeWidget_add_devices.build_qtree(self.devices_flowchem.devices)
+
+        self.treeWidget_add_devices.setEnabled(True)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
