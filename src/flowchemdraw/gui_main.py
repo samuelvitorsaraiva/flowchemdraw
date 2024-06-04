@@ -35,8 +35,6 @@ class main_widget(QMainWindow):
 
         self.radioButton_toml_not_available.toggled.connect(self.options_connections)
 
-        self.radioButton_flowchem_running.toggled.connect(self.options_connections)
-
         self.build()
 
     def build(self):

@@ -1,6 +1,7 @@
 from matplotlib.figure import Figure
 import matplotlib.patches as patches
 from flowchemdraw.utils import math
+from abc import ABC, abstractmethod
 
 PATTERN_DIMENSION = 1
 
@@ -37,6 +38,9 @@ class drawobject:
                 except:
                     part.set_edgecolor('k')
 
+    def build(self):
+        pass
+
 class components(drawobject):
 
     def __init__(self, ax: Figure, position: (float, float), type_object: str = 'devices', name: str = '', parent=None):
@@ -57,9 +61,14 @@ class components(drawobject):
 
         self.name = name
 
-    def _putname_(self, x, y):
+    def _putname_(self, x, y, where='below'):
 
-        self.add_part(self.ax.text(self.position[0], self.position[1] - 1.5 * PATTERN_DIMENSION, self.name, fontsize=8,
+        if where == 'below':
+            pos = self.position[1] - 1.5 * PATTERN_DIMENSION
+        else:
+            pos = self.position[1] + 1.5 * PATTERN_DIMENSION
+
+        self.add_part(self.ax.text(self.position[0], pos, self.name, fontsize=8,
                                    bbox=dict(facecolor='red', alpha=0.25),
                                    horizontalalignment='center'))
 
@@ -76,7 +85,7 @@ class components(drawobject):
         self.remove_draw()
         self.parent.parts = []
         self.position = new_pos
-        self.parent.build()
+        self.build()
 
     def square_activation_draw(self, active: bool) -> None:
 
@@ -124,6 +133,6 @@ class components(drawobject):
         else:
             return self.connection_points[0]
 
-
-
+    def build(self):
+        pass
 
