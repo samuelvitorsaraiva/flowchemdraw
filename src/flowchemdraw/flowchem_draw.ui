@@ -126,7 +126,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
           </size>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -149,7 +149,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="QTreeWidget" name="treeWidget_device">
+            <widget class="treewidget_device_class" name="treeWidget_device">
              <column>
               <property name="text">
                <string notr="true"/>
@@ -317,6 +317,11 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <class>custom_qtreewidget</class>
    <extends>QTreeWidget</extends>
    <header location="global">custom_qtreewidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>treewidget_device_class</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">treewidget_device_class.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

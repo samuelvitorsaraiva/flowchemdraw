@@ -9,12 +9,12 @@ import pickle
 from flowchemdraw.utils.manage_class import import_class, get_package_directory
 from flowchemdraw.utils.drawclass import drawobject
 from flowchemdraw.utils.devices_flowchem import devices_flowchem
+from flowchemdraw.manage import manage
+from flowchemdraw.utils.constantes import *
 
 from flowchemdraw.figures import __all__ as ilustrations
 
 adress = os.getcwd()
-
-_ITENS_GROUPS = 'devices connections others'.split()
 
 class main_widget(QMainWindow):
 
@@ -43,16 +43,11 @@ class main_widget(QMainWindow):
 
         self.treeWidget_device.setHeaderLabels(['components'])
 
-        self.treeWidget_parents = {}
-        for name in _ITENS_GROUPS:
-            self.treeWidget_parents[name] = QTreeWidgetItem(self.treeWidget_device, [name, 'Folder'])
-            self.treeWidget_device.expandItem(self.treeWidget_parents[name])
-
         self.treeWidget_device.setColumnCount(1)
 
-        self.treeWidget_device.itemClicked.connect(self.treeWidget_device_clicked)
+        self.treeWidget_device.Main_Window = self
 
-        self.components = dict()
+        self.manage = manage(ax=self.widget_drawing.axes)
 
         ilustratio_tree = dict()
         for fig in ilustrations:
@@ -64,67 +59,7 @@ class main_widget(QMainWindow):
 
         self.treeWidget_add_devices.Main_Window = self
 
-        self.devices_flowchem = devices_flowchem()
-
-    def add_new_item_Qtree(self, head, name):
-        parent = QTreeWidgetItem(self.treeWidget_parents[head], [name, 'Folder'])
-        self.treeWidget_device.expandItem(parent)
-
-    def remove_selected_item(self):
-        selected_item = self.treeWidget_device.currentItem()
-        if selected_item.text(0) in _ITENS_GROUPS:
-            return
-
-
-        self.components[selected_item.text(0)]['draw_class'].remove_draw()
-        self.components.pop(selected_item.text(0))
-        self.widget_drawing.draw()
-
-        if selected_item:
-            parent = selected_item.parent()
-            if parent is None:
-                # It's a top-level item
-                index = self.treeWidget_device.indexOfTopLevelItem(selected_item)
-                self.treeWidget_device.takeTopLevelItem(index)
-            else:
-                # It's a child item
-                parent.takeChild(parent.indexOfChild(selected_item))
-
-    def treeWidget_device_clicked(self, it, col):
-        name = it.text(col)
-        if name in _ITENS_GROUPS:
-
-            for var in self.components.keys():
-                self.components[var]['draw_class'].active_draw(False)
-
-        else:
-
-            for var in self.components.keys():
-                if var == name:
-                    self.components[name]['draw_class'].active_draw(True)
-                else:
-                    self.components[var]['draw_class'].active_draw(False)
-
-        self.widget_drawing.draw()
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Delete:
-            try:
-                self.remove_selected_item()
-            except:
-                pass
-        else:
-            super().keyPressEvent(event)
-
-    def _find_item(self, parent, text):
-        for i in range(parent.childCount()):
-            child = parent.child(i)
-            if child.text(0) == text:
-                return child
-            found_item = self._find_item(child, text)
-            if found_item:
-                return found_item
-        return None
+        #self.devices_flowchem = devices_flowchem()
 
     def save(self):
         if not self.components:
@@ -207,6 +142,8 @@ class main_widget(QMainWindow):
 
 
         self.treeWidget_add_devices.build_qtree(self.devices_flowchem.devices)
+
+        self.treeWidget_add_devices.type = 'devices'
 
         self.treeWidget_add_devices.setEnabled(True)
 

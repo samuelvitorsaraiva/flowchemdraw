@@ -3,17 +3,21 @@ import matplotlib.patches as patches
 from flowchemdraw.utils import math
 from abc import ABC, abstractmethod
 
-PATTERN_DIMENSION = 1
+from flowchemdraw.utils.constantes import *
 
 class drawobject:
 
-    def __init__(self, type_object: str, position: (float, float) = (0, 0)):
+    def __init__(self, type_object: str = 'connections', position: (float, float) = (0, 0), name: str = ''):
 
         self.position = position
 
         self.type_object = type_object
 
+        self.name = name
+
         self.parts = []
+
+        self.actived_square_action: Figure | None = None
 
     def add_part(self, part):
 
@@ -23,29 +27,43 @@ class drawobject:
         for part in self.parts:
             part.remove()
 
-
     def active_draw(self, actived: bool) -> None:
-        if actived:
-            for part in self.parts:
-                try:
-                    part.set_color('red')
-                except:
-                    part.set_edgecolor('red')
+        if self.type_object == 'connections':
+            if actived:
+                for part in self.parts:
+                    try:
+                        part.set_color('blue')
+                    except:
+                        part.set_edgecolor('blue')
+            else:
+                for part in self.parts:
+                    try:
+                        part.set_color('k')
+                    except:
+                        part.set_edgecolor('k')
         else:
-            for part in self.parts:
-                try:
-                    part.set_color('k')
-                except:
-                    part.set_edgecolor('k')
+            if actived:
+                pos = (self.position[0] - PATTERN_DIMENSION,
+                       self.position[1] - PATTERN_DIMENSION)
 
-    def build(self):
-        pass
+                square = patches.Rectangle(pos, 2 * PATTERN_DIMENSION, 2 * PATTERN_DIMENSION, edgecolor='blue',
+                                           fill=False, alpha=0.5)
+
+                self.actived_square_action = self.ax.add_patch(square)
+
+            else:
+                if self.actived_square_action != None:
+
+                    self.actived_square_action.remove()
+
+                self.actived_square_action = None
+
 
 class components(drawobject):
 
     def __init__(self, ax: Figure, position: (float, float), type_object: str = 'devices', name: str = '', parent=None):
 
-        super().__init__(type_object, position=position)
+        super().__init__(type_object, position=position, name=name)
 
         self.ax = ax
 
@@ -58,8 +76,6 @@ class components(drawobject):
         self.parent = parent
 
         self.connection_points = [None]
-
-        self.name = name
 
     def _putname_(self, x, y, where='below'):
 
@@ -134,5 +150,5 @@ class components(drawobject):
             return self.connection_points[0]
 
     def build(self):
-        pass
+        ...
 
