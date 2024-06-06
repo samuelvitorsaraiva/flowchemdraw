@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QTreeWidget, QMenu, QTreeWidgetItem, QMessageBox
 from flowchemdraw.utils.manage_class import import_class
 from flowchemdraw.utils.constantes import *
 
-class custom_qtreewidget(QTreeWidget):
+class qtreewidget_add_component_class(QTreeWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.Main_Window = None
@@ -35,10 +35,13 @@ class custom_qtreewidget(QTreeWidget):
                 action.triggered.connect(self.addition_component)
                 menu.exec_(self.viewport().mapToGlobal(event.pos()))
 
-        super(custom_qtreewidget, self).mousePressEvent(event)
+        super(qtreewidget_add_component_class, self).mousePressEvent(event)
 
     def addition_component(self):
         name = self.item_clicked.text(0)
+
+        if self.item_clicked.parent() is not None:
+            name = self.item_clicked.parent().text(0)+'/'+name
 
         name = self.Main_Window.manage._add_component(name)
 

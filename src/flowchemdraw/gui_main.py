@@ -12,8 +12,6 @@ from flowchemdraw.utils.devices_flowchem import devices_flowchem
 from flowchemdraw.manage import manage
 from flowchemdraw.utils.constantes import *
 
-from flowchemdraw.figures import __all__ as ilustrations
-
 adress = os.getcwd()
 
 class main_widget(QMainWindow):
@@ -50,7 +48,7 @@ class main_widget(QMainWindow):
         self.manage = manage(ax=self.widget_drawing.axes)
 
         ilustratio_tree = dict()
-        for fig in ilustrations:
+        for fig in COMPONENTS_NONELETRONIC:
             ilustratio_tree[fig] = None
 
         self.treeWidget_add_others.build_qtree(ilustratio_tree)
@@ -59,7 +57,9 @@ class main_widget(QMainWindow):
 
         self.treeWidget_add_devices.Main_Window = self
 
-        #self.devices_flowchem = devices_flowchem()
+        self.treeWidget_add_devices.type = 'devices'
+
+        self.devices_flowchem = devices_flowchem()
 
     def save(self):
         if not self.components:
@@ -133,19 +133,32 @@ class main_widget(QMainWindow):
                                                options=option)
             if name[0]:
                 self.devices_flowchem.read_toml_file(name[0])
+
+                self.treeWidget_add_devices.setEnabled(False)
+
+                for key in self.devices_flowchem.devices:
+                    if self.devices_flowchem.devices[key]['components'] != None:
+                        for comp in self.devices_flowchem.devices[key]['components'].keys():
+                            class_name = key+'/'+comp
+                            name = self.devices_flowchem.devices_name[key]+'/'+comp
+                            self.manage._add_devices_auto(class_name, name)
+                            self.treeWidget_device.add_new_item_Qtree('devices', name)
+                    else:
+                        self.manage._add_devices_auto(key, self.devices_flowchem.devices_name[key])
+                        self.treeWidget_device.add_new_item_Qtree('devices', self.devices_flowchem.devices_name[key])
+
+                self.widget_drawing.draw()
+
             else:
                 return
 
         elif self.radioButton_toml_not_available.isChecked():
 
+            self.treeWidget_add_devices.setEnabled(True)
+
             self.devices_flowchem.devices = self.devices_flowchem.all_devices_available
 
-
         self.treeWidget_add_devices.build_qtree(self.devices_flowchem.devices)
-
-        self.treeWidget_add_devices.type = 'devices'
-
-        self.treeWidget_add_devices.setEnabled(True)
 
 
 if __name__ == '__main__':

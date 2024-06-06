@@ -1,14 +1,17 @@
 from flowchemdraw.utils.drawclass import drawobject
 from flowchemdraw.utils.manage_class import import_class
 from flowchemdraw.utils.constantes import *
+from flowchemdraw.components import CustomMessageBox
 
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QDialog
 from matplotlib.figure import Figure
 from abc import ABC
 
 class component:
 
     def __init__(self, name: str, position: (float, float), draw: drawobject):
+
+        self.class_name = name
 
         self.name = name
 
@@ -61,19 +64,35 @@ class manage:
                 msg.exec_()
                 return '-'
 
-        dev = import_class('flowchemdraw.figures', name.split('_')[0])
-        if dev == None:
-            dev = import_class('flowchemdraw.figures', 'undefined')
+        figure_draw = 'undefined'
+
+        if name.split('_')[0] in COMPONENTS_NONELETRONIC:
+
+            figure_draw = name.split('_')[0]
+
+        elif name.split('_')[0] in DRAW_DEVICES_CORRESPONDENT.keys():
+
+            figure_draw = DRAW_DEVICES_CORRESPONDENT[name.split('_')[0]]
 
 
-        self.components[name] = component(name=name,
-                                          position=LOCATION_NEW_DEVICES,
-                                          draw=dev(self.ax, pos=LOCATION_NEW_DEVICES))
+        dialog = CustomMessageBox(name=name)
+        if dialog.exec_() == QDialog.Accepted:
+            name = dialog.get_input()
 
-        return name
+            dev = import_class('flowchemdraw.figures', figure_draw)
+
+            self.components[name] = component(name=name,
+                                              position=LOCATION_NEW_DEVICES,
+                                              draw=dev(self.ax, pos=LOCATION_NEW_DEVICES, name=name))
+            return name
+
+        else:
+
+            return '-'
 
 
     def _dell_component(self, name: str) -> list[str]:
+        self.components[name].draw.active_draw(False)
         self.components[name].draw.remove_draw()
         self.components.pop(name)
 
@@ -137,3 +156,33 @@ class manage:
     def _dell_connection(self, name):
         self.connection[name].draw.remove_draw()
         self.connection.pop(name)
+
+
+    def _add_devices_auto(self, class_name, name):
+
+        loc = (0, 0)
+        for i in range(1, SPACE_GRID_FIG, PATTERN_DIMENSION*4):
+            for j in range(1, SPACE_GRID_FIG, PATTERN_DIMENSION*4):
+                aprove = True
+                for key in self.components.keys():
+                    aprove = aprove and not self._isnearby(key, (i, j))
+                if aprove:
+                    loc = (i, j)
+                    break
+            else:
+                continue
+            break
+
+        figure_draw = 'undefined'
+
+        if  class_name.split('_')[0] in DRAW_DEVICES_CORRESPONDENT.keys():
+
+            figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name.split('_')[0]]
+
+        dev = import_class('flowchemdraw.figures', figure_draw)
+
+        self.components[name] = component(name=name,
+                                          position=loc,
+                                          draw=dev(self.ax, pos=loc, name=name))
+
+        self.components[name].class_name = class_name

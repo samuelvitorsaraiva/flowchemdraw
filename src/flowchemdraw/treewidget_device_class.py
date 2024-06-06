@@ -9,10 +9,14 @@ class treewidget_device_class(QTreeWidget):
         super().__init__(parent)
         self.Main_Window = None
 
+        self.component_selected = None
+
         self.treeWidget_parents = {}
         for name in ITENS_GROUPS:
             self.treeWidget_parents[name] = QTreeWidgetItem(self, [name, 'Folder'])
             self.expandItem(self.treeWidget_parents[name])
+
+
 
     def add_new_item_Qtree(self, head, name):
         parent = QTreeWidgetItem(self.treeWidget_parents[head], [name, 'Folder'])
@@ -32,10 +36,11 @@ class treewidget_device_class(QTreeWidget):
                     self.Main_Window.manage._dell_connection(name)
                 else:
                     itens += self.Main_Window.manage._dell_component(name)
-                    itens = [name]
 
                 for it in itens:
                     self.remove_item(it)
+
+                self.Main_Window.widget_drawing.draw()
 
 
     def remove_item(self, name):
@@ -50,7 +55,6 @@ class treewidget_device_class(QTreeWidget):
             parent.takeChild(parent.indexOfChild(selected_item))
 
 
-
     def select_item(self, text):
         # Iterate through all items in the tree to find the matching item
         iterator = QTreeWidgetItemIterator(self)
@@ -63,14 +67,37 @@ class treewidget_device_class(QTreeWidget):
                 return item
             iterator += 1
 
+
     def mousePressEvent(self, event):
+
+        if self.component_selected != None:
+            if self.component_selected in self.Main_Window.manage.components.keys():
+                self.Main_Window.manage.components[self.component_selected].draw.active_draw(False)
+            elif self.component_selected in self.Main_Window.manage.connection.keys():
+                self.Main_Window.manage.connection[self.component_selected].draw.active_draw(False)
+
+
         self.item_clicked = self.itemAt(event.pos())
         if self.item_clicked:
-            if event.button() == Qt.LeftButton:
-                ...
-            elif event.button() == Qt.RightButton:
-                ...
+
+            if not self.item_clicked.text(0) in ITENS_GROUPS:
+
+                if event.button() == Qt.LeftButton:
+
+                    self.component_selected = self.item_clicked.text(0)
+
+                    if self.component_selected in self.Main_Window.manage.components.keys():
+                        self.Main_Window.manage.components[self.component_selected].draw.active_draw(True)
+                    else:
+                        self.Main_Window.manage.connection[self.component_selected].draw.active_draw(True)
+
+                elif event.button() == Qt.RightButton:
+                    ...
+
+        self.Main_Window.widget_drawing.draw()
 
         super(treewidget_device_class, self).mousePressEvent(event)
+
+
 
 

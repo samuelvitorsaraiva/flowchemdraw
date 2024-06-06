@@ -126,7 +126,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
           </size>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -180,7 +180,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
             <number>0</number>
            </property>
            <item>
-            <widget class="custom_qtreewidget" name="treeWidget_add_devices">
+            <widget class="qtreewidget_add_component_class" name="treeWidget_add_devices">
              <property name="enabled">
               <bool>false</bool>
              </property>
@@ -192,7 +192,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
             </widget>
            </item>
            <item>
-            <widget class="custom_qtreewidget" name="treeWidget_add_others">
+            <widget class="qtreewidget_add_component_class" name="treeWidget_add_others">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -314,14 +314,14 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>custom_qtreewidget</class>
-   <extends>QTreeWidget</extends>
-   <header location="global">custom_qtreewidget.h</header>
-  </customwidget>
-  <customwidget>
    <class>treewidget_device_class</class>
    <extends>QTreeWidget</extends>
    <header location="global">treewidget_device_class.h</header>
+  </customwidget>
+  <customwidget>
+   <class>qtreewidget_add_component_class</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">qtreewidget_add_component_class.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

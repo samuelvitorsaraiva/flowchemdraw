@@ -20,6 +20,12 @@ class devices_flowchem:
 
         self.devices = self.all_devices_available
 
+        self.devices_name = dict()
+
+        for dev in self.device_available:
+
+            self.devices_name[dev] = dev
+
 
     def read_toml_file(self, file):
 
@@ -28,11 +34,11 @@ class devices_flowchem:
         with open(file, "rb") as f:
             data = tomllib.load(f)
 
-        lista_toml = [data['device'][name]['type'] for name in data['device'].keys()]
         self.devices = dict()
-        for dev in lista_toml:
-            if dev in self.device_available.keys():
-                self.devices[dev] = self.all_devices_available[dev]
+        for name in data['device']:
+            if data['device'][name]['type'] in self.device_available.keys():
+                self.devices[data['device'][name]['type']] = self.all_devices_available[data['device'][name]['type']]
+                self.devices_name[data['device'][name]['type']] = name
             else:
                 print(f'Device {dev} is not found in the flowchem!')
 

@@ -136,7 +136,7 @@ class mplwidget(FigureCanvas):
 
             if self.move_componets['actived']:
                 conection_dell = self.Main_Window.manage._move_component(self.component, position)
-                [self.Main_Window.treeWidget_add_devices.remove_item(it) for it in conection_dell]
+                [self.Main_Window.treeWidget_device.remove_item(it) for it in conection_dell]
                 self.Main_Window.manage.components[self.component].draw.square_activation_draw(False)
                 self.move_componets['actived'] = False
                 self.component = None
