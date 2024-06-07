@@ -73,7 +73,9 @@ class mplwidget(FigureCanvas):
 
                             name = self.Main_Window.manage._add_connection(self.component, dev, X, Y)
 
-                            self.Main_Window.treeWidget_device.add_new_item_Qtree('connections', name)
+                            if name:
+
+                                self.Main_Window.treeWidget_device.add_new_item_Qtree('connections', name)
 
                             break
 

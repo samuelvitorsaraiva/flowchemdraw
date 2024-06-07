@@ -21,6 +21,22 @@ class component:
 
         self.type = draw.type_object
 
+        self.connections = [None] * len(draw.connection_points)
+
+    def _add_connection_point(self, name, pos):
+
+        i = 0
+        for connection in self.draw.connection_points:
+            if connection == pos and self.connections[i] == None:
+                self.connections[i] = name
+                return True
+            i += 1
+
+        return False
+
+
+
+
 
 class connection:
 
@@ -141,16 +157,20 @@ class manage:
             return dx < MIN_DISTANCE_TO_MOVE and dy < MIN_DISTANCE_TO_MOVE
 
 
-    def _add_connection(self, origin: str, destiny: str, X: list[float], Y: list[float]) -> str:
-
-        draw = drawobject(type_object='connections')
-        draw.add_part(self.ax.plot(X, Y, alpha=1, color='k')[0])
+    def _add_connection(self, origin: str, destiny: str, X: list[float], Y: list[float]) -> str | bool:
 
         name = f'{origin}_{destiny}'
 
-        self.connection[name] = connection(origin, destiny, draw)
+        if self.components[destiny]._add_connection_point(name, (X[-1], Y[-1])) and self.components[origin]._add_connection_point(name, (X[0], Y[0])):
 
-        return name
+            draw = drawobject(type_object='connections')
+            draw.add_part(self.ax.plot(X, Y, alpha=1, color='k')[0])
+
+            self.connection[name] = connection(origin, destiny, draw)
+
+            return name
+
+        return False
 
 
     def _dell_connection(self, name):
