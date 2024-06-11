@@ -28,11 +28,10 @@ class component:
         i = 0
         for connection in self.draw.connection_points:
             if connection == pos and self.connections[i] == None:
-                self.connections[i] = name
-                return True
+                return [True, i]
             i += 1
 
-        return False
+        return [False, 0]
 
 
 
@@ -76,6 +75,15 @@ class manage:
                 msg.setWindowTitle("Warning")
                 msg.setText("There is a device placed in the designated area to new ones. "
                             "Please move away its device of this area before add new one.")
+                msg.setIcon(QMessageBox.Critical)
+                msg.exec_()
+                return '-'
+
+            if name in self.components.keys():
+                msg = QMessageBox()
+                msg.setWindowTitle("Warning")
+                msg.setText("There is a component with this name. "
+                            "Please change the name to add new component.")
                 msg.setIcon(QMessageBox.Critical)
                 msg.exec_()
                 return '-'
@@ -161,7 +169,13 @@ class manage:
 
         name = f'{origin}_{destiny}'
 
-        if self.components[destiny]._add_connection_point(name, (X[-1], Y[-1])) and self.components[origin]._add_connection_point(name, (X[0], Y[0])):
+        condition_1, ind1 = self.components[destiny]._add_connection_point(name, (X[-1], Y[-1]))
+        condition_2, ind2 = self.components[origin]._add_connection_point(name, (X[0], Y[0]))
+
+        if  condition_1 and condition_2 :
+
+            self.components[destiny].connections[ind1] = name
+            self.components[origin].connections[ind2] = name
 
             draw = drawobject(type_object='connections')
             draw.add_part(self.ax.plot(X, Y, alpha=1, color='k')[0])
@@ -195,9 +209,14 @@ class manage:
 
         figure_draw = 'undefined'
 
-        if  class_name.split('_')[0] in DRAW_DEVICES_CORRESPONDENT.keys():
+        if len(class_name.split('_')) > 2:
+            class_name_pure = class_name[- 1 - len(class_name.split('_')[-1]):]
+        else:
+            class_name_pure = class_name.split('_')[0]
 
-            figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name.split('_')[0]]
+        if  class_name_pure in DRAW_DEVICES_CORRESPONDENT.keys():
+
+            figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name_pure]
 
         dev = import_class('flowchemdraw.figures', figure_draw)
 

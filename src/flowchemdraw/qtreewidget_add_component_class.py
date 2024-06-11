@@ -28,7 +28,10 @@ class qtreewidget_add_component_class(QTreeWidget):
         self.item_clicked = self.itemAt(event.pos())
         if self.item_clicked:
             if event.button() == Qt.LeftButton:
-                self.Main_Window.widget_components.draw_component(self.item_clicked.text(0))
+                name = self.item_clicked.text(0)
+                if self.item_clicked.parent() is not None:
+                    name = self.item_clicked.parent().text(0) + '/' + name
+                self.Main_Window.widget_components.draw_component(name)
             elif event.button() == Qt.RightButton:
                 menu = QMenu()
                 action = menu.addAction("Add")

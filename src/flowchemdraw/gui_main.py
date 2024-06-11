@@ -62,7 +62,7 @@ class main_widget(QMainWindow):
         self.devices_flowchem = devices_flowchem()
 
     def save(self):
-        if not self.components:
+        if not self.manage.components:
             msg = QMessageBox()
             msg.setWindowTitle("Warning")
             msg.setText("There is nothing to be saved.")
@@ -78,7 +78,7 @@ class main_widget(QMainWindow):
 
         if name[0]:
             with open(name[0], 'wb') as f:
-                pickle.dump(self.components, f)
+                pickle.dump(self.manage, f)
 
     def load(self):
 
@@ -89,7 +89,7 @@ class main_widget(QMainWindow):
                                            options=option)
         if name[0]:
 
-            if self.components:
+            if self.manage.components:
                 qm = QMessageBox()
                 ret = qm.question(self, '', "Are you sure you want to remove the current project in order "
                                             "to load a new one? Please ensure that you save it before doing so if you "
@@ -98,13 +98,14 @@ class main_widget(QMainWindow):
                     iterator = QTreeWidgetItemIterator(self.treeWidget_device)
                     while iterator.value():
                         self.treeWidget_device.setCurrentItem(iterator.value())
-                        self.remove_selected_item()
+                        self.treeWidget_device.remove_item_p1()
                         iterator += 1
                 else:
                     return
 
             with open(name[0], 'rb') as f:
                 data = pickle.load(f)
+
                 for name in data.keys():
                     if data[name]['draw_class'].type_object == 'devices':
                         dev = import_class('flowchemdraw.figures', name.split('_')[0])
@@ -133,6 +134,8 @@ class main_widget(QMainWindow):
                                                options=option)
             if name[0]:
                 self.devices_flowchem.read_toml_file(name[0])
+
+                self.textBrowser.add_tolm_file(self.devices_flowchem.config_file, adress=adress)
 
                 self.treeWidget_add_devices.setEnabled(False)
 

@@ -24,6 +24,10 @@ class treewidget_device_class(QTreeWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Delete:
+            self.remove_item_p1()
+
+
+    def remove_item_p1(self):
 
             selected_item = self.currentItem()
 
