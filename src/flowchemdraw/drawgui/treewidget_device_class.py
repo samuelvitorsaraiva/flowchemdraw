@@ -1,8 +1,9 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTreeWidget, QMenu, QTreeWidgetItem, QMessageBox, QTreeWidgetItemIterator
+from PyQt5.QtWidgets import QTreeWidget, QMenu, QTreeWidgetItem, QMessageBox, QTreeWidgetItemIterator, QDialog
 
 from flowchemdraw.utils.manage_class import import_class
 from flowchemdraw.utils.constantes import *
+from flowchemdraw.components import CustomMessageBox
 
 class treewidget_device_class(QTreeWidget):
     def __init__(self, parent=None):
@@ -40,6 +41,8 @@ class treewidget_device_class(QTreeWidget):
                     self.Main_Window.manage._dell_connection(name)
                 else:
                     itens += self.Main_Window.manage._dell_component(name)
+
+                self.Main_Window.textBrowser.write_toml_file(self.Main_Window.manage.components)
 
                 for it in itens:
                     self.remove_item(it)
@@ -96,11 +99,34 @@ class treewidget_device_class(QTreeWidget):
                         self.Main_Window.manage.connection[self.component_selected].draw.active_draw(True)
 
                 elif event.button() == Qt.RightButton:
-                    ...
+                    menu = QMenu()
+                    action = menu.addAction("Settings")
+                    action2 = menu.addAction("Delete")
+                    action.triggered.connect(self.setting_file)
+                    action2.triggered.connect(self.remove_item_p1)
+                    menu.exec_(self.viewport().mapToGlobal(event.pos()))
 
         self.Main_Window.widget_drawing.draw()
 
         super(treewidget_device_class, self).mousePressEvent(event)
+
+    def setting_file(self):
+        name = self.item_clicked.text(0)
+
+        cfg = self.Main_Window.manage.components[name].configuration_block
+
+        dialog = CustomMessageBox(name=name, class_name=name.split('/')[0], configuration_file=cfg)
+        if dialog.exec_() == QDialog.Accepted:
+            [name, config_dict] = dialog.get_input()
+
+            if len(name.split('/')) > 1:
+                for key, comp in self.Main_Window.manage.components.items():
+                    if len(key.split('/')) > 1 and key.split('/')[0] == name.split('/')[0]:
+                        comp.update_configuration_file(config_dict)
+            else:
+                self.Main_Window.manage.components[name].update_configuration_file(config_dict)
+
+        self.Main_Window.textBrowser.write_toml_file(self.Main_Window.manage.components)
 
 
 

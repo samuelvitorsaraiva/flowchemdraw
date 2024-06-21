@@ -25,7 +25,7 @@ class mplwidget_components(FigureCanvas):
 
     def draw_component(self, name):
 
-        if  name in DRAW_DEVICES_CORRESPONDENT.keys():
+        if name in DRAW_DEVICES_CORRESPONDENT.keys():
 
             name = DRAW_DEVICES_CORRESPONDENT[name]
 

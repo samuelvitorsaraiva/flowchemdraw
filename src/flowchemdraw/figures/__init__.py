@@ -8,6 +8,11 @@ from .Tverbinder import Tverbinder
 from .Xverbinder import Xverbinder
 from .spect import spect
 from .chromatography import chromatography
+from .heatexchanger import heatexchanger
+from .pressure_sensor import pressure_sensor
+from .flowmeter import flowmeter
+from .bubblesensor import bubblesensor
+
 
 __all__ = ['pump', 'erlenmeyer', 'valve', 'flowreactor', 'undefined', 'syringe', 'Tverbinder', 'Xverbinder', 'spect',
-           'chromatography']
+           'chromatography', 'heatexchanger', 'pressure_sensor', 'flowmeter', 'bubblesensor']

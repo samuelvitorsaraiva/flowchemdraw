@@ -3,49 +3,11 @@ from flowchemdraw.utils.manage_class import import_class
 from flowchemdraw.utils.constantes import *
 from flowchemdraw.components import CustomMessageBox
 
+from flowchemdraw.manage import device_component, utensils, connection
+
 from PyQt5.QtWidgets import QMessageBox, QDialog
 from matplotlib.figure import Figure
-from abc import ABC
-
-class component:
-
-    def __init__(self, name: str, position: (float, float), draw: drawobject):
-
-        self.class_name = name
-
-        self.name = name
-
-        self.position = position
-
-        self.draw = draw
-
-        self.type = draw.type_object
-
-        self.connections = [None] * len(draw.connection_points)
-
-    def _add_connection_point(self, name, pos):
-
-        i = 0
-        for connection in self.draw.connection_points:
-            if connection == pos and self.connections[i] == None:
-                return [True, i]
-            i += 1
-
-        return [False, 0]
-
-
-
-
-
-class connection:
-
-    def __init__(self, origen: str, destiny: str, draw: drawobject):
-
-        self.origen = origen
-
-        self.destiny = destiny
-
-        self.draw = draw
+from loguru import logger
 
 
 class manage:
@@ -54,23 +16,22 @@ class manage:
 
         self.components = dict()
 
+        self.utensils = dict()
+
         self.connection = dict()
 
         self.ax = ax
 
 
-    def _add_component(self, name: str) -> str:
+    def _add_utensils(self, name: str) -> str:
+        ...
 
-        k = 1
-        for dev in self.components.keys():
-            if dev.split('_')[0] == name:
-                k += 1
+    def _add_component(self, name: str, type: str = 'device') -> str:
 
-        name = name + '_' + str(k)
+        class_name = name
 
         for dev in self.components.keys():
-            x, y = self.components[dev].position
-            if LOCATION_NEW_DEVICES[0] == x and LOCATION_NEW_DEVICES[0] == y:
+            if self._isnearby(dev):
                 msg = QMessageBox()
                 msg.setWindowTitle("Warning")
                 msg.setText("There is a device placed in the designated area to new ones. "
@@ -79,53 +40,55 @@ class manage:
                 msg.exec_()
                 return '-'
 
-            if name in self.components.keys():
-                msg = QMessageBox()
-                msg.setWindowTitle("Warning")
-                msg.setText("There is a component with this name. "
-                            "Please change the name to add new component.")
-                msg.setIcon(QMessageBox.Critical)
-                msg.exec_()
-                return '-'
+        if type == 'others':
 
-        figure_draw = 'undefined'
-
-        if name.split('_')[0] in COMPONENTS_NONELETRONIC:
-
-            figure_draw = name.split('_')[0]
-
-        elif name.split('_')[0] in DRAW_DEVICES_CORRESPONDENT.keys():
-
-            figure_draw = DRAW_DEVICES_CORRESPONDENT[name.split('_')[0]]
-
-
-        dialog = CustomMessageBox(name=name)
-        if dialog.exec_() == QDialog.Accepted:
-            name = dialog.get_input()
-
-            dev = import_class('flowchemdraw.figures', figure_draw)
-
-            self.components[name] = component(name=name,
-                                              position=LOCATION_NEW_DEVICES,
-                                              draw=dev(self.ax, pos=LOCATION_NEW_DEVICES, name=name))
-            return name
+            figure_draw = class_name
 
         else:
 
+            figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name]
+
+            dialog = CustomMessageBox(name=name, class_name=name.split('/')[0])
+            if dialog.exec_() == QDialog.Accepted:
+                [name, config_dict] = dialog.get_input()
+            else:
+                return '-'
+
+
+        if name in self.components.keys():
+            msg = QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("There is a component with this name. "
+                        "Please change the name to add new component.")
+            msg.setIcon(QMessageBox.Critical)
+            msg.exec_()
             return '-'
+
+        dev = import_class('flowchemdraw.figures', figure_draw)
+
+        self.components[name] = component(name=name,
+                                          class_name=class_name,
+                                          position=LOCATION_NEW_DEVICES,
+                                          draw=dev(self.ax, pos=LOCATION_NEW_DEVICES,
+                                                   name=name))
+
+        self.components[name].update_configuration_file(config_dict)
+
+        return name
 
 
     def _dell_component(self, name: str) -> list[str]:
-        self.components[name].draw.active_draw(False)
-        self.components[name].draw.remove_draw()
-        self.components.pop(name)
 
         connection_dell = []
         for key in self.connection.keys():
-            if self.connection[key].origen == name or self.connection[key].destiny == name:
+            if self.connection[key].origin == name or self.connection[key].destiny == name:
                 connection_dell.append(key)
 
         [self._dell_connection(key) for key in connection_dell]
+
+        self.components[name].draw.active_draw(False)
+        self.components[name].draw.remove_draw()
+        self.components.pop(name)
 
         return connection_dell
 
@@ -137,7 +100,7 @@ class manage:
 
         connection_dell = []
         for key in self.connection.keys():
-            if self.connection[key].origen == name or self.connection[key].destiny == name:
+            if self.connection[key].origin == name or self.connection[key].destiny == name:
                 connection_dell.append(key)
 
         [self._dell_connection(key) for key in connection_dell]
@@ -153,7 +116,7 @@ class manage:
         ...
 
 
-    def _isnearby(self, name, pos, active: str = 'active') -> bool:
+    def _isnearby(self, name, pos: (float, float) = LOCATION_NEW_DEVICES, active: str = 'active') -> bool:
 
         x, y = self.components[name].position
         dx = abs(x - pos[0])
@@ -184,15 +147,29 @@ class manage:
 
             return name
 
+        if condition_1:
+            x = origin
+        else:
+            x = destiny
+
+        logger.info(f'The connection between {origin} and {destiny} can not be created because there is another '
+                    f'line connected in the {x} at the same point.')
+
         return False
 
 
     def _dell_connection(self, name):
+
+        for dev in [self.connection[name].destiny, self.connection[name].origin]:
+            lista = self.components[dev].connections
+            lista = [None if element == name else element for element in lista]
+            self.components[dev].connections = lista
+
         self.connection[name].draw.remove_draw()
         self.connection.pop(name)
 
 
-    def _add_devices_auto(self, class_name, name):
+    def _add_devices_auto(self, class_name: str, name: str, configuration_file: dict | None = None):
 
         loc = (0, 0)
         for i in range(1, SPACE_GRID_FIG, PATTERN_DIMENSION*4):
@@ -209,19 +186,17 @@ class manage:
 
         figure_draw = 'undefined'
 
-        if len(class_name.split('_')) > 2:
-            class_name_pure = class_name[- 1 - len(class_name.split('_')[-1]):]
-        else:
-            class_name_pure = class_name.split('_')[0]
+        if  class_name in DRAW_DEVICES_CORRESPONDENT.keys():
 
-        if  class_name_pure in DRAW_DEVICES_CORRESPONDENT.keys():
-
-            figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name_pure]
+            figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name]
 
         dev = import_class('flowchemdraw.figures', figure_draw)
 
         self.components[name] = component(name=name,
+                                          class_name=class_name,
                                           position=loc,
                                           draw=dev(self.ax, pos=loc, name=name))
 
-        self.components[name].class_name = class_name
+        if configuration_file != None:
+
+            self.components[name].update_configuration_file(configuration_file)

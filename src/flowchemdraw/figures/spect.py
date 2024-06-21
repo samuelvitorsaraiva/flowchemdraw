@@ -1,8 +1,8 @@
 import numpy as np
 from flowchemdraw.utils.drawclass import components
 from matplotlib.figure import Figure
+from flowchemdraw.utils import math
 
-PATTERN_DIMENSION = 1
 class spect(components):
 
     type_object = 'devices'
@@ -15,7 +15,7 @@ class spect(components):
 
     def build(self):
         phis = np.arange(0, 6.28, 0.01)
-        r = PATTERN_DIMENSION / 2
+        r = self.dimention / 2
         self.add_part(self.ax.plot(*math.xy(r, phis, pos=self.position), c='k', ls='-')[0])
 
         x = np.linspace(self.position[0] - r, self.position[0] + r, 100)

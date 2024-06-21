@@ -31,7 +31,7 @@ class valve(components):
         self._putname_(self.position[0], self.position[1] - 1.5 * r)
 
         connection_points = []
-        for i in range(len(x)):
+        for i in range(len(x)-1):
             connection_points.append((x[i], y[i]))
 
         self.connection_points = connection_points

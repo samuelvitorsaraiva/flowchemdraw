@@ -54,3 +54,6 @@ class qtreewidget_add_component_class(QTreeWidget):
 
             self.Main_Window.widget_drawing.draw()
 
+            if self.type == 'devices':
+
+                self.Main_Window.textBrowser.write_toml_file(self.Main_Window.manage.components)

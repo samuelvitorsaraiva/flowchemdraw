@@ -75,7 +75,7 @@ class components(drawobject):
 
         self.parent = parent
 
-        self.connection_points = [None]
+        self.connection_points = []
 
     def _putname_(self, x, y, where='below'):
 

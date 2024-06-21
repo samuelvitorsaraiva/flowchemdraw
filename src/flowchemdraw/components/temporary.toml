@@ -1,0 +1,4 @@
+[device.CVC3000]
+type = "CVC3000"
+aio = "None"
+

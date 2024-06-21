@@ -22,3 +22,11 @@ def get_package_directory(package_name):
 
     # Return the directory
     return package_dir
+
+
+def get_parameters_details(method):
+    signature = inspect.signature(method)
+    return {
+        name: param.default if param.default is not param.empty else None
+        for name, param in signature.parameters.items() if name != 'self' and name != 'kwargs' and name != 'name'
+    }

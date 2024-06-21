@@ -8,7 +8,6 @@ import os
 import pickle
 from flowchemdraw.utils.manage_class import import_class, get_package_directory
 from flowchemdraw.utils.drawclass import drawobject
-from flowchemdraw.utils.devices_flowchem import devices_flowchem
 from flowchemdraw.manage import manage
 from flowchemdraw.utils.constantes import *
 
@@ -16,18 +15,16 @@ from flowchemdraw.utils.constantes import *
 
 class Edit_Setting_Window(QMainWindow):
 
-    def __init__(self, MainWindow, adress, text='', adress_file=''):
+    def __init__(self, MainWindow, text=''):
         super().__init__()
 
-        loadUi(adress + "/components/Edit_Setting_Files.ui", self)
+        loadUi("./components/Edit_Setting_Files.ui", self)
 
         self.pushButton_cancel.clicked.connect(self.click_cancel)
 
         self.pushButton_save.clicked.connect(self.click_save)
 
         self.textEdit.append(text)
-
-        self.adress_file = adress_file
 
         self.MainWindow = MainWindow
 
@@ -36,12 +33,13 @@ class Edit_Setting_Window(QMainWindow):
 
         self.new_text = self.textEdit.toPlainText()
 
-        with open(self.adress_file, 'w') as file:
-            file.write(self.new_text)
-
         self.MainWindow.content = self.new_text
 
         self.MainWindow.setPlainText(self.new_text)
+
+        self.MainWindow.write_temporary_file()
+
+        self.MainWindow.edit_configuration_file()
 
         self.close()
 

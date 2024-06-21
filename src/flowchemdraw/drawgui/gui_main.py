@@ -1,29 +1,25 @@
 from PyQt5 import QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-from PyQt5.QtCore import Qt
 import sys
 import os
-
+import tomllib
 import pickle
-from flowchemdraw.utils.manage_class import import_class, get_package_directory
-from flowchemdraw.utils.drawclass import drawobject
-from flowchemdraw.utils.devices_flowchem import devices_flowchem
-from flowchemdraw.manage import manage
-from flowchemdraw.utils.constantes import *
 
-adress = os.getcwd()
+from flowchemdraw.utils.manage_class import import_class, get_package_directory
+from flowchemdraw.manage import manage, component
+from flowchemdraw.utils.constantes import *
 
 class main_widget(QMainWindow):
 
     def __init__(self):
         super().__init__()
 
-        loadUi(adress + "/flowchem_draw.ui", self)
+        loadUi(ADRESS + "/drawgui/flowchem_draw.ui", self)
 
         self.setWindowTitle("Flowchem plugin - Drawing platform system")
 
-        self.setWindowIcon(QtGui.QIcon(adress + '/figures/icon_window.png'))
+        self.setWindowIcon(QtGui.QIcon(ADRESS + '/figures/icon_window.png'))
 
         self.actionSave_Project.triggered.connect(self.save)
 
@@ -57,9 +53,9 @@ class main_widget(QMainWindow):
 
         self.treeWidget_add_devices.Main_Window = self
 
-        self.treeWidget_add_devices.type = 'devices'
+        self.textBrowser.MainWindow = self
 
-        self.devices_flowchem = devices_flowchem()
+        self.treeWidget_add_devices.type = 'devices'
 
     def save(self):
         if not self.manage.components:
@@ -106,20 +102,34 @@ class main_widget(QMainWindow):
             with open(name[0], 'rb') as f:
                 data = pickle.load(f)
 
-                for name in data.keys():
-                    if data[name]['draw_class'].type_object == 'devices':
-                        dev = import_class('flowchemdraw.figures', name.split('_')[0])
-                        self.components[name] = {'draw_class': dev(self.widget_drawing.axes,
-                                                                   pos=data[name]['draw_class'].position),
-                                                 'type': name.split('_')[0]}
-                        self.add_new_item_Qtree('devices', name)
-                    else:
-                        x = data[name]['draw_class'].parts[0].get_xdata()
-                        y = data[name]['draw_class'].parts[0].get_ydata()
-                        obj = drawobject(type_object='connections')
-                        obj.add_part(self.widget_drawing.axes.plot(x, y, alpha=1, color='k')[0])
-                        self.components[name] = {'draw_class': obj}
-                        self.add_new_item_Qtree('connections', name)
+                for item in data.components.values():
+
+                    figure_draw = item.class_name
+
+                    if item.class_name in DRAW_DEVICES_CORRESPONDENT.keys():
+
+                        figure_draw = DRAW_DEVICES_CORRESPONDENT[item.class_name]
+
+                    dev = import_class('flowchemdraw.figures', figure_draw)
+
+                    self.manage.components[item.name] = component(name=item.name,
+                                                             class_name=item.class_name,
+                                                              position=item.position,
+                                                              draw=dev(self.widget_drawing.axes,
+                                                                       pos=item.position, name=item.name))
+
+                    self.treeWidget_device.add_new_item_Qtree(self.manage.components[item.name].draw.type_object,
+                                                                          item.name)
+
+                for item in data.connection.values():
+
+                    X = item.draw.parts[0].get_xdata()
+
+                    Y = item.draw.parts[0].get_ydata()
+
+                    name = self.manage._add_connection(origin=item.origin, destiny=item.destiny, X=X, Y=Y)
+
+                    self.treeWidget_device.add_new_item_Qtree('connections', name)
 
                 self.widget_drawing.draw()
 
@@ -133,24 +143,35 @@ class main_widget(QMainWindow):
             name = QFileDialog.getOpenFileName(self, "Load flowchem (toml) file", dirctory_flowchem, "toml Files (*.toml)",
                                                options=option)
             if name[0]:
-                self.devices_flowchem.read_toml_file(name[0])
 
-                self.textBrowser.add_tolm_file(self.devices_flowchem.config_file, adress=adress)
+                with open(name[0], "rb") as f:
+                    data = tomllib.load(f)
+
+                devices = dict(); devices_name = dict()
+                for name in data['device']:
+                    type = data['device'][name]['type']
+                    if type in CLASS_DEVICE_AVAILABLE_FLOWCHEM.keys():
+                        devices[type] = CLASS_COMPONENT_DEVICE_AVAILABLE_FLOWCHEM[type]
+                        devices_name[type] = name
+                    else:
+                        logger.error(f'Device {type} is not found in the flowchem!')
 
                 self.treeWidget_add_devices.setEnabled(False)
 
-                for key in self.devices_flowchem.devices:
-                    if self.devices_flowchem.devices[key]['components'] != None:
-                        for comp in self.devices_flowchem.devices[key]['components'].keys():
+                for key in devices:
+                    if devices[key]['components'] != None:
+                        for comp in devices[key]['components'].keys():
                             class_name = key+'/'+comp
-                            name = self.devices_flowchem.devices_name[key]+'/'+comp
-                            self.manage._add_devices_auto(class_name, name)
+                            name = devices_name[key]+'/'+comp
+                            self.manage._add_devices_auto(class_name, name, configuration_file=data['device'][devices_name[key]])
                             self.treeWidget_device.add_new_item_Qtree('devices', name)
                     else:
-                        self.manage._add_devices_auto(key, self.devices_flowchem.devices_name[key])
-                        self.treeWidget_device.add_new_item_Qtree('devices', self.devices_flowchem.devices_name[key])
+                        self.manage._add_devices_auto(key, devices_name[key], configuration_file=data['device'][devices_name[key]])
+                        self.treeWidget_device.add_new_item_Qtree('devices', devices_name[key])
 
                 self.widget_drawing.draw()
+
+                self.textBrowser.write_toml_file(self.manage.components)
 
             else:
                 return
@@ -159,9 +180,9 @@ class main_widget(QMainWindow):
 
             self.treeWidget_add_devices.setEnabled(True)
 
-            self.devices_flowchem.devices = self.devices_flowchem.all_devices_available
+            devices = CLASS_COMPONENT_DEVICE_AVAILABLE_FLOWCHEM
 
-        self.treeWidget_add_devices.build_qtree(self.devices_flowchem.devices)
+        self.treeWidget_add_devices.build_qtree(devices)
 
 
 if __name__ == '__main__':
