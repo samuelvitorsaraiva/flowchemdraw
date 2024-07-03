@@ -13,6 +13,8 @@ class pressure_sensor(components):
 
         self.connection_central = True
 
+        self.settup_connections(r_plus=self.dimention/2)
+
         self.build()
 
     def build(self):
@@ -34,6 +36,3 @@ class pressure_sensor(components):
         self.add_part(self.ax.plot([self.position[0], x1[i] - r/20], [self.position[1], y1[i] - r/20], c='k', ls='-')[0])
 
         self._putname_(self.position[0], self.position[1] - 1.5 * r)
-
-
-        self.connection_points = [(self.position[0] - r, self.position[1]), (self.position[0] + r, self.position[1])]

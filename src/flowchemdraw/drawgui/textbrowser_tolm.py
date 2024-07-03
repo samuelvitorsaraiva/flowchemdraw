@@ -2,7 +2,6 @@ import time
 
 from PyQt5.QtWidgets import QTextBrowser, QMenu
 from PyQt5.QtCore import Qt
-from flowchemdraw.components import Edit_Setting_Window
 from flowchemdraw.manage.manage import manage
 from flowchemdraw.utils.constantes import *
 import tomllib
@@ -26,10 +25,7 @@ class textbrowser_tolm(QTextBrowser):
         if event.button() == Qt.LeftButton:
             ...
         elif event.button() == Qt.RightButton:
-            menu = QMenu()
-            action = menu.addAction("Edit")
-            action.triggered.connect(self.edit_toml_file)
-            menu.exec_(self.viewport().mapToGlobal(event.pos()))
+            ...
 
         super(textbrowser_tolm, self).mousePressEvent(event)
 
@@ -39,6 +35,8 @@ class textbrowser_tolm(QTextBrowser):
         text = str()
         components = []
         for comp in mc.values():
+            if comp.draw.type_object == 'others':
+                continue
             if not comp.class_name_device in CLASS_DEVICE_AVAILABLE_FLOWCHEM.keys() or comp.name_device in components:
                 continue
 
@@ -58,14 +56,6 @@ class textbrowser_tolm(QTextBrowser):
         self.content = text
         self.setPlainText(self.content)
         self.write_temporary_file()
-
-
-    def edit_toml_file(self):
-
-        self.Edit_Setting_Window = Edit_Setting_Window(self, text=self.content)
-
-        self.Edit_Setting_Window.show()
-
 
 
     def write_temporary_file(self):

@@ -14,7 +14,14 @@ class syringe(components):
 
         super().__init__(ax=ax, position=pos, type_object=syringe.type_object, name=name, parent=self)
 
+        self.settup_connections()
+
         self.build()
+
+    def settup_connections(self):
+        size = self.dimention * 2
+        x, y = self.position
+        self.connection_points = {1: {'name': None, 'pairs': [1], 'position': (x, y-0.53*size/2 - 0.1*size)}}
 
     def build(self):
 
@@ -51,28 +58,35 @@ class syringe(components):
 
         self._putname_(x, y, where='above')
 
-        self.connection_points = [(x, y-0.53*size/2 - 0.1*size)]
+        self.arrow_information = False
 
-        '''
+    def operation_set(self, direction='right'):
 
-        size = self.dimention
-        x, y = self.position
-        boxstyle = "round,pad=0.1,rounding_size=0.1"  # Style
-        self.add_part(self.ax.plot([x - size / 2, x - size / 2], [y - size / 3, y + size / 3], color='k'))
-        self.add_part(self.ax.plot([x - size / 2, x - size / 2], [y - size / 3, y + size / 3], color='k'))
+        if self.arrow_information:
 
-        rounded_square = patches.FancyBboxPatch((x-size/2, y), size/50, size, boxstyle=boxstyle, edgecolor='k', facecolor='k')
-        self.add_part(self.ax.add_patch(rounded_square))
-        rounded_square = patches.FancyBboxPatch((x, y), size, size/50, boxstyle=boxstyle, edgecolor='k', facecolor='k')
-        self.add_part(self.ax.add_patch(rounded_square))
+            self.parts[-1].remove()
 
-        
+            self.arrow_information = False
 
-        img = plt.imread('icons/syringe.png')
-        imagebox = OffsetImage(img, alpha=0.5, zoom=0.1)
-        ao = AnchoredOffsetbox('lower left', pad=0, borderpad=1, child=imagebox)
-        self.ax.add_artist(ao)
+        else:
 
-        '''
+            size = self.dimention * 2
+
+            pos = self.position
+
+            if direction == 'right':
+                xy = (pos[0] + size / 4, pos[1] + size / 3)
+                xytext = (pos[0] + size / 4, pos[1] - size / 3)
+            else:
+                xytext = (pos[0] + size / 4, pos[1] + size / 3)
+                xy = (pos[0] + size / 4, pos[1] - size / 3)
+
+            arrow = self.ax.annotate('', xy=xy, xytext=xytext,
+                        arrowprops={'arrowstyle': '-|>'}, va='center')
+
+            self.add_part(arrow)
+
+            self.arrow_information = True
+
 
 

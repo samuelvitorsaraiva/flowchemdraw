@@ -12,7 +12,12 @@ class heatexchanger(components):
 
         super().__init__(ax=ax, position=pos, type_object=heatexchanger.type_object, name=name, parent=self)
 
+        self.settup_connections()
+
         self.build()
+
+    def settup_connections(self):
+        self.connection_points = {1: {'name': None, 'pairs': [1], 'position': (self.position[0], self.position[1])}}
 
     def build(self):
         phis = np.arange(0, 6.28, 0.01)
@@ -27,5 +32,3 @@ class heatexchanger(components):
         self.add_part(self.ax.plot(x+self.position[0]-r, y, color='k')[0])
 
         self._putname_(self.position[0], self.position[1] - 1.5 * r)
-
-        self.connection_points = [(self.position[0], self.position[1])]

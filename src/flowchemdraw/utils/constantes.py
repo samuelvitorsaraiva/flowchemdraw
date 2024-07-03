@@ -69,11 +69,16 @@ DRAW_DEVICES_CORRESPONDENT = {
 'R4Heater/reactor4': 'undefined',
 'Spinsolve': 'spect',
 'ViciValve': 'valve',
-'plugins/pump1': 'pump',
-'plugins/pump2': 'pump',
-'plugins/pump3': 'pump',
-'plugins/pump4': 'pump',
+'plugins/pump1': 'syringe',
+'plugins/pump2': 'syringe',
+'plugins/pump3': 'syringe',
+'plugins/pump4': 'syringe',
 'plugins/valve': 'valve'
+}
+
+COMANDS_PROTOCOLS = {
+'pump': {'infuse': {'rate': str, 'volume': str}, 'withdraw': {'rate': str, 'volume': str}},
+'syringe': {'infuse': {'rate': str, 'volume': str}, 'withdraw': {'rate': str, 'volume': str}}
 }
 
 CLASS_DEVICE_AVAILABLE_FLOWCHEM = _autodiscover_devices_in_module(flowchem_dev)
@@ -84,3 +89,5 @@ for dev in CLASS_DEVICE_AVAILABLE_FLOWCHEM.keys():
     CONFIGURATION_FILE_COMPLETE['device'][dev] = get_parameters_details(CLASS_DEVICE_AVAILABLE_FLOWCHEM[dev].__init__)
 
 CLASS_COMPONENT_DEVICE_AVAILABLE_FLOWCHEM = creat_dict_devices(CLASS_DEVICE_AVAILABLE_FLOWCHEM)
+
+SIMULATION_VELOCITY = 1 # Simulation velocity 1 -> represent an actual time

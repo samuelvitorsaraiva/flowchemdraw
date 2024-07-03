@@ -1,6 +1,10 @@
-class connection:
+from flowchemdraw.utils.drawclass import drawobject
 
-    def __init__(self, origin: str, destiny: str, draw: drawobject):
+class connection_class:
+
+    def __init__(self, parent, origin: dict, destiny: dict, draw: drawobject):
+
+        self.parent = parent
 
         self.origin = origin
 
@@ -8,17 +12,52 @@ class connection:
 
         self.draw = draw
 
-        self.DI: float | None = None
+        self.operation_ = False
 
-        self.length: float | None = None
-
-    def _set_configuration(self, DI: float, lenght: float) -> None:
         '''
-        Set the configurations parameter of the connections
-
         :param DI: Internal diameter m (SI)
-        :param lenght: lenght of the connection m (SI)
+        :param length: length of the connection m (SI)
+        '''
+        self.additional_configuration = {'DI': {'value': None, 'class': float},
+                                         'length': {'value': None, 'class': float}}
+
+
+    def operation_set(self, **kwargs) -> None:
+        '''
+        :param direction: 1 or -1 (infuse and withdraw)
+        :param rate: valocity of the changes
         :return: None
         '''
-        self.DI = DI
-        self.length = lenght
+        self.operation_direction = kwargs['direction']
+
+        self.operation_rate = kwargs['rate']
+
+        self.operation_ = True
+
+        if kwargs['orientation'] == 'backward':
+
+            kwargs['connection_id'] = self.origin['connetion_id']
+
+            self.parent.components[self.origin['component']].operation_set(**kwargs)
+
+        else:
+
+            kwargs['connection_id'] = self.destiny['connetion_id']
+
+            self.parent.components[self.destiny['component']].operation_set(**kwargs)
+
+
+
+
+    def operation_draw(self) -> None:
+
+        if self.operation_:
+
+            self.draw.operation_set(rate=self.operation_rate, orientation=self.operation_direction, operation=True)
+
+
+    def operation_stop(self) -> None:
+
+        self.draw.operation_set(rate=self.operation_rate, orientation=self.operation_direction, operation=False)
+
+

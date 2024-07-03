@@ -111,22 +111,25 @@ class treewidget_device_class(QTreeWidget):
         super(treewidget_device_class, self).mousePressEvent(event)
 
     def setting_file(self):
-        name = self.item_clicked.text(0)
 
-        cfg = self.Main_Window.manage.components[name].configuration_block
+        if self.item_clicked.parent().text(0) == 'devices':
 
-        dialog = CustomMessageBox(name=name, class_name=name.split('/')[0], configuration_file=cfg)
-        if dialog.exec_() == QDialog.Accepted:
-            [name, config_dict] = dialog.get_input()
+            name = self.item_clicked.text(0)
 
-            if len(name.split('/')) > 1:
-                for key, comp in self.Main_Window.manage.components.items():
-                    if len(key.split('/')) > 1 and key.split('/')[0] == name.split('/')[0]:
-                        comp.update_configuration_file(config_dict)
-            else:
-                self.Main_Window.manage.components[name].update_configuration_file(config_dict)
+            cfg = self.Main_Window.manage.components[name].configuration_block
 
-        self.Main_Window.textBrowser.write_toml_file(self.Main_Window.manage.components)
+            dialog = CustomMessageBox(name=name, class_name=name.split('/')[0], configuration_file=cfg)
+            if dialog.exec_() == QDialog.Accepted:
+                [name, config_dict] = dialog.get_input_device()
+
+                if len(name.split('/')) > 1:
+                    for key, comp in self.Main_Window.manage.components.items():
+                        if len(key.split('/')) > 1 and key.split('/')[0] == name.split('/')[0]:
+                            comp.update_configuration_file(config_dict)
+                else:
+                    self.Main_Window.manage.components[name].update_configuration_file(config_dict)
+
+            self.Main_Window.textBrowser.write_toml_file(self.Main_Window.manage.components)
 
 
 

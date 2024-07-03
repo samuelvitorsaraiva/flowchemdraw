@@ -1,9 +1,11 @@
-from flowchemdraw.utils.drawclass import drawobject
+from flowchemdraw.utils.drawclass import connections
 from flowchemdraw.utils.manage_class import import_class
 from flowchemdraw.utils.constantes import *
 from flowchemdraw.components import CustomMessageBox
 
-from flowchemdraw.manage import device_component, utensils, connection
+from flowchemdraw.manage.connection import connection_class
+from flowchemdraw.manage.device_component import device_component_class
+from flowchemdraw.manage.utensils import utensils_class
 
 from PyQt5.QtWidgets import QMessageBox, QDialog
 from matplotlib.figure import Figure
@@ -44,13 +46,19 @@ class manage:
 
             figure_draw = class_name
 
+            dialog = CustomMessageBox(name=name, class_name=name.split('/')[0], type=type)
+            if dialog.exec_() == QDialog.Accepted:
+                name = dialog.get_input_utensils()
+            else:
+                return '-'
+
         else:
 
             figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name]
 
             dialog = CustomMessageBox(name=name, class_name=name.split('/')[0])
             if dialog.exec_() == QDialog.Accepted:
-                [name, config_dict] = dialog.get_input()
+                [name, config_dict] = dialog.get_input_device()
             else:
                 return '-'
 
@@ -66,13 +74,24 @@ class manage:
 
         dev = import_class('flowchemdraw.figures', figure_draw)
 
-        self.components[name] = component(name=name,
-                                          class_name=class_name,
-                                          position=LOCATION_NEW_DEVICES,
-                                          draw=dev(self.ax, pos=LOCATION_NEW_DEVICES,
-                                                   name=name))
+        if type == 'others':
 
-        self.components[name].update_configuration_file(config_dict)
+            self.components[name] = utensils_class(self,
+                                                   name=name,
+                                                   class_name=class_name,
+                                                   position=LOCATION_NEW_DEVICES,
+                                                   draw=dev(self.ax, pos=LOCATION_NEW_DEVICES,
+                                                            name=name))
+        else:
+
+            self.components[name] = device_component_class(self,
+                                                           name=name,
+                                                           class_name=class_name,
+                                                           position=LOCATION_NEW_DEVICES,
+                                                           draw=dev(self.ax, pos=LOCATION_NEW_DEVICES,
+                                                                    name=name))
+
+            self.components[name].update_configuration_file(config_dict)
 
         return name
 
@@ -128,22 +147,36 @@ class manage:
             return dx < MIN_DISTANCE_TO_MOVE and dy < MIN_DISTANCE_TO_MOVE
 
 
+    def _nearbydevice(self, pos: (float, float) = LOCATION_NEW_DEVICES) -> str:
+
+        for name in self.components.keys():
+
+            if self._isnearby(name=name, pos=pos):
+
+                return name
+
+        return '-'
+
+
     def _add_connection(self, origin: str, destiny: str, X: list[float], Y: list[float]) -> str | bool:
 
         name = f'{origin}_{destiny}'
 
-        condition_1, ind1 = self.components[destiny]._add_connection_point(name, (X[-1], Y[-1]))
-        condition_2, ind2 = self.components[origin]._add_connection_point(name, (X[0], Y[0]))
+        condition_1, ind1 = self.components[destiny]._add_connection_point((X[-1], Y[-1]))
+        condition_2, ind2 = self.components[origin]._add_connection_point((X[0], Y[0]))
 
-        if  condition_1 and condition_2 :
+        if condition_1 and condition_2:
 
-            self.components[destiny].connections[ind1] = name
-            self.components[origin].connections[ind2] = name
+            self.components[destiny].draw.connection_points[ind1]['name'] = name
+            self.components[origin].draw.connection_points[ind2]['name'] = name
 
-            draw = drawobject(type_object='connections')
+            draw = connections(self.ax, type_object='connections')
             draw.add_part(self.ax.plot(X, Y, alpha=1, color='k')[0])
 
-            self.connection[name] = connection(origin, destiny, draw)
+            self.connection[name] = connection_class(self,
+                                                     origin={'component': origin, 'connetion_id': ind2},
+                                                     destiny={'component': destiny, 'connetion_id': ind1},
+                                                     draw=draw)
 
             return name
 
@@ -160,10 +193,10 @@ class manage:
 
     def _dell_connection(self, name):
 
-        for dev in [self.connection[name].destiny, self.connection[name].origin]:
-            lista = self.components[dev].connections
-            lista = [None if element == name else element for element in lista]
-            self.components[dev].connections = lista
+        for dev in [self.connection[name].destiny['component'], self.connection[name].origin['component']]:
+            for id_ in self.components[dev].draw.connection_points.keys():
+                if self.components[dev].draw.connection_points[id_]['name'] == name:
+                    self.components[dev].draw.connection_points[id_]['name'] = None
 
         self.connection[name].draw.remove_draw()
         self.connection.pop(name)
@@ -186,17 +219,60 @@ class manage:
 
         figure_draw = 'undefined'
 
-        if  class_name in DRAW_DEVICES_CORRESPONDENT.keys():
+        if class_name in DRAW_DEVICES_CORRESPONDENT.keys():
 
             figure_draw = DRAW_DEVICES_CORRESPONDENT[class_name]
 
         dev = import_class('flowchemdraw.figures', figure_draw)
 
-        self.components[name] = component(name=name,
-                                          class_name=class_name,
-                                          position=loc,
-                                          draw=dev(self.ax, pos=loc, name=name))
+        self.components[name] = device_component_class(self,
+                                                       name=name,
+                                                       class_name=class_name,
+                                                       position=loc,
+                                                       draw=dev(self.ax, pos=loc, name=name))
 
         if configuration_file != None:
 
             self.components[name].update_configuration_file(configuration_file)
+
+
+    def _update(self, manage_file):
+
+        for item in manage_file.components.values():
+
+            figure_draw = item.class_name
+
+            if item.class_name in DRAW_DEVICES_CORRESPONDENT.keys():
+                figure_draw = DRAW_DEVICES_CORRESPONDENT[item.class_name]
+
+            dev = import_class('flowchemdraw.figures', figure_draw)
+
+            if item.draw.type_object == 'devices':
+
+                self.components[item.name] = device_component_class(self,
+                                                                    name=item.name,
+                                                                    class_name=item.class_name,
+                                                                    position=item.position,
+                                                                    draw=dev(self.ax,
+                                                                             pos=item.position,
+                                                                             name=item.name))
+
+                self.components[item.name].configuration_block = item.configuration_block
+
+            else:
+
+                self.components[item.name] = utensils_class(self,
+                                                            name=item.name,
+                                                            class_name=item.class_name,
+                                                            position=item.position,
+                                                            draw=dev(self.ax,
+                                                                     pos=item.position,
+                                                                     name=item.name))
+
+        for item in manage_file.connection.values():
+
+            X = item.draw.parts[0].get_xdata()
+
+            Y = item.draw.parts[0].get_ydata()
+
+            name = self._add_connection(origin=item.origin['component'], destiny=item.destiny['component'], X=X, Y=Y)

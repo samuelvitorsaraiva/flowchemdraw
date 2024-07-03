@@ -5,9 +5,12 @@ import sys
 import os
 import tomllib
 import pickle
+from loguru import logger
 
 from flowchemdraw.utils.manage_class import import_class, get_package_directory
-from flowchemdraw.manage import manage, component
+from flowchemdraw.manage import manage
+from flowchemdraw.manage.utensils import utensils_class
+from flowchemdraw.manage.device_component import device_component_class
 from flowchemdraw.utils.constantes import *
 
 class main_widget(QMainWindow):
@@ -19,7 +22,7 @@ class main_widget(QMainWindow):
 
         self.setWindowTitle("Flowchem plugin - Drawing platform system")
 
-        self.setWindowIcon(QtGui.QIcon(ADRESS + '/figures/icon_window.png'))
+        self.setWindowIcon(QtGui.QIcon(ADRESS + '/figures/Icons/icon_window.png'))
 
         self.actionSave_Project.triggered.connect(self.save)
 
@@ -102,34 +105,17 @@ class main_widget(QMainWindow):
             with open(name[0], 'rb') as f:
                 data = pickle.load(f)
 
+                self.manage._update(data)
+
                 for item in data.components.values():
-
-                    figure_draw = item.class_name
-
-                    if item.class_name in DRAW_DEVICES_CORRESPONDENT.keys():
-
-                        figure_draw = DRAW_DEVICES_CORRESPONDENT[item.class_name]
-
-                    dev = import_class('flowchemdraw.figures', figure_draw)
-
-                    self.manage.components[item.name] = component(name=item.name,
-                                                             class_name=item.class_name,
-                                                              position=item.position,
-                                                              draw=dev(self.widget_drawing.axes,
-                                                                       pos=item.position, name=item.name))
 
                     self.treeWidget_device.add_new_item_Qtree(self.manage.components[item.name].draw.type_object,
                                                                           item.name)
+                self.textBrowser.write_toml_file(self.manage.components)
 
                 for item in data.connection.values():
 
-                    X = item.draw.parts[0].get_xdata()
-
-                    Y = item.draw.parts[0].get_ydata()
-
-                    name = self.manage._add_connection(origin=item.origin, destiny=item.destiny, X=X, Y=Y)
-
-                    self.treeWidget_device.add_new_item_Qtree('connections', name)
+                    self.treeWidget_device.add_new_item_Qtree('connections', item.origin + '_' + item.destiny)
 
                 self.widget_drawing.draw()
 

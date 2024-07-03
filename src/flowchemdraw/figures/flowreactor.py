@@ -11,6 +11,8 @@ class flowreactor(components):
 
         super().__init__(ax=ax, position=pos, type_object=flowreactor.type_object, name=name, parent=self)
 
+        self.settup_connections(r_plus=0.1)
+
         self.build()
 
     def build(self):
@@ -23,8 +25,3 @@ class flowreactor(components):
         self.add_part(self.ax.plot(x, 0.5 * self.dimention * np.sin(50*(x-pos[0]+r/8)) + pos[1] + r / 2, color='k')[0])
 
         self._putname_(pos[0] + r / 2, pos[1] - r / 5)
-
-        self.connection_points = [(self.position[0] - r/2, self.position[1]),
-                                  (self.position[0] + r/2, self.position[1]),
-                                  (self.position[0], self.position[1] - r/2),
-                                  (self.position[0], self.position[1] + r/2)]

@@ -2,7 +2,11 @@ from matplotlib.backends.backend_qt5agg import FigureCanvas, NavigationToolbar2Q
 
 from matplotlib.figure import Figure
 
-from flowchemdraw.utils.drawclass import drawobject
+from PyQt5.QtWidgets import QMenu
+
+from PyQt5.QtCore import QPoint
+
+from functools import partial
 
 from flowchemdraw.utils.constantes import *
 
@@ -28,8 +32,8 @@ class mplwidget_set(FigureCanvas):
 
         # Connect the mouse events to handlers
         self.mpl_connect('button_press_event', self.on_mouse_press)
-        self.mpl_connect('button_release_event', self.on_mouse_release)
-        self.mpl_connect('motion_notify_event', self.on_mouse_move)
+        #self.mpl_connect('button_release_event', self.on_mouse_release)
+        #self.mpl_connect('motion_notify_event', self.on_mouse_move)
         self.mpl_connect('scroll_event', self.on_mouse_scroll)
 
         self.move_componets = {'actived': False}
@@ -49,20 +53,65 @@ class mplwidget_set(FigureCanvas):
     def on_mouse_press(self, event):
         if event.inaxes:
 
-            if event.button == 1:
-                print('mouse 1')
-            elif event.button == 2:
-                print('mouse 2')
-            elif event.button == 3:
-                print('mouse 3')
+            name = self.Main_Window.manage._nearbydevice(pos=(event.xdata, event.ydata))
 
-    def on_mouse_release(self, event):
-        if event.inaxes:
-            print('release')
+            if name != '-':
 
-    def on_mouse_move(self, event):
-        ...
+                if event.button == 1:
+
+                    self.Main_Window.tableWidget._update_device(name)
+
+                elif event.button == 2:
+                    ...
+                elif event.button == 3:
+
+                    if self.Main_Window.manage.components[name].class_name in DRAW_DEVICES_CORRESPONDENT.keys():
+                        figure_name = DRAW_DEVICES_CORRESPONDENT[self.Main_Window.manage.components[name].class_name]
+                    else:
+                        figure_name = self.Main_Window.manage.components[name].class_name
+
+
+                    if figure_name in COMANDS_PROTOCOLS.keys():
+
+                        menu = QMenu()
+
+                        protocol = menu.addMenu("Protocols")
+
+                        action_protocol = []
+
+                        for key in COMANDS_PROTOCOLS[figure_name].keys():
+                            action_protocol.append(protocol.addAction(key))
+                            action_protocol[-1].triggered.connect(partial(self.protocoll_call, name, figure_name, key))
+
+
+                        x = int(event.xdata/(SPACE_GRID_FIG+1) * self.figure.bbox.bounds[-2])
+                        y = 100+int(self.figure.bbox.bounds[-1] - event.ydata/(SPACE_GRID_FIG+1) * self.figure.bbox.bounds[-1])
+                        menu.exec_(self.Main_Window.mapToGlobal(QPoint(x, y)))
 
     def on_mouse_scroll(self, event):
         if event.inaxes:
             print(f'Mouse scrolled at ({event.xdata}, {event.ydata}) with step {event.step}')
+
+
+    def setting(self):
+        ...
+
+    def protocoll_call(self, name: str, figure_class: str, protocol: str):
+
+        configuration = dict()
+
+        configuration['Device'] = name
+
+        configuration['command'] = protocol
+
+        configuration['component'] = self.Main_Window.manage.components[name]
+
+        configuration = configuration | COMANDS_PROTOCOLS[figure_class][protocol]
+
+        self.Main_Window.manage_protocol._add_commands(configuration)
+
+        self.Main_Window.treeView.update_protocols()
+
+
+
+

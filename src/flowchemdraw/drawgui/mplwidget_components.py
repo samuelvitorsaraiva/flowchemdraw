@@ -35,8 +35,8 @@ class mplwidget_components(FigureCanvas):
         if dev == None:
             dev = import_class('flowchemdraw.figures', 'undefined')
         obj = dev(self.axes, pos=(1, 1))
-        for p in obj.connection_points:
-            self.axes.plot(p[0], p[1], 'x', color='r')
+        for p in obj.connection_points.values():
+            self.axes.plot(p['position'][0], p['position'][1], 'x', color='r')
         self.draw()
 
 

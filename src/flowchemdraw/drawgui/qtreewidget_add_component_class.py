@@ -46,7 +46,7 @@ class qtreewidget_add_component_class(QTreeWidget):
         if self.item_clicked.parent() is not None:
             name = self.item_clicked.parent().text(0)+'/'+name
 
-        name = self.Main_Window.manage._add_component(name)
+        name = self.Main_Window.manage._add_component(name, self.type)
 
         if name != '-':
 

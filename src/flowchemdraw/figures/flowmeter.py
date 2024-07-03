@@ -12,6 +12,8 @@ class flowmeter(components):
 
         super().__init__(ax=ax, position=pos, type_object=flowmeter.type_object, name=name, parent=self)
 
+        self.settup_connections()
+
         self.build()
 
     def build(self):
@@ -29,5 +31,3 @@ class flowmeter(components):
 
 
         self._putname_(self.position[0], self.position[1] - 1.5 * r)
-
-        self.connection_points = [(self.position[0] - r, self.position[1]), (self.position[0] + r, self.position[1])]

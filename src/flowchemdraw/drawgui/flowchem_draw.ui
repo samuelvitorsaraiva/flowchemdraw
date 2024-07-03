@@ -83,7 +83,7 @@ font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../figures/logo.png</pixmap>
+          <pixmap>../figures/Icons/logo.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>

@@ -15,7 +15,22 @@ class valve(components):
 
         self.connection_central = True
 
+        self.settup_connections()
+
         self.build()
+
+    def settup_connections(self):
+        phis = np.linspace(np.pi / 4, (2 + 1 / 4) * np.pi, self.connections + 1)
+        r = self.dimention / 1.3
+        x, y = math.xy(r, phis, pos=self.position)
+
+        self.connection_points = dict()
+        for i in range(1, len(x)):
+            if i%2 == 0:
+                self.connection_points[i] = {'name': None, 'pairs': [i - 1], 'position': (x[i], y[i])}
+            else:
+                self.connection_points[i] = {'name': None, 'pairs': [i + 1], 'position': (x[i], y[i])}
+
 
     def build(self):
 
@@ -30,8 +45,9 @@ class valve(components):
 
         self._putname_(self.position[0], self.position[1] - 1.5 * r)
 
-        connection_points = []
-        for i in range(len(x)-1):
-            connection_points.append((x[i], y[i]))
+        conn = self.connection_points
+        for c in conn.keys():
+            x = [conn[c]['position'][0], conn[conn[c]['pairs'][0]]['position'][0]]
+            y = [conn[c]['position'][1], conn[conn[c]['pairs'][0]]['position'][1]]
+            self.add_part(self.ax.plot(x, y, c='k')[0])
 
-        self.connection_points = connection_points

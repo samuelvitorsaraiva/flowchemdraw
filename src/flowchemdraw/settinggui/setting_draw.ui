@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>947</width>
+    <height>748</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -79,7 +79,7 @@
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../figures/logo.png</pixmap>
+          <pixmap>../figures/Icons/logo.png</pixmap>
          </property>
          <property name="scaledContents">
           <bool>true</bool>
@@ -92,7 +92,7 @@
     <item row="1" column="0">
      <widget class="mplwidget_set" name="widget" native="true"/>
     </item>
-    <item row="1" column="1">
+    <item row="1" column="1" rowspan="2">
      <widget class="QFrame" name="frame">
       <property name="minimumSize">
        <size>
@@ -129,11 +129,11 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QTreeView" name="treeView">
+        <widget class="treewidget_protocols" name="treeView">
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>0</height>
+           <height>400</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -149,7 +149,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>30</height>
+           <height>40</height>
           </size>
          </property>
          <property name="title">
@@ -191,10 +191,33 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_run">
+            <property name="text">
+             <string>Play</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
+       <item>
+        <widget class="qtablewidget_protocols" name="tableWidget"/>
+       </item>
       </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_infor">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>20</height>
+       </size>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
      </widget>
     </item>
    </layout>
@@ -204,12 +227,24 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>947</width>
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionLoad_Project"/>
+   </widget>
+   <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLoad_Project">
+   <property name="text">
+    <string>Load_Project</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -217,6 +252,16 @@
    <extends>QWidget</extends>
    <header>mplwidget_set.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>treewidget_protocols</class>
+   <extends>QTreeView</extends>
+   <header>treewidget_protocols.h</header>
+  </customwidget>
+  <customwidget>
+   <class>qtablewidget_protocols</class>
+   <extends>QTableWidget</extends>
+   <header location="global">qtablewidget_protocols.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

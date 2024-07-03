@@ -11,6 +11,8 @@ class spect(components):
 
         super().__init__(ax=ax, position=pos, type_object=spect.type_object, name=name, parent=self)
 
+        self.settup_connections()
+
         self.build()
 
     def build(self):
@@ -23,5 +25,3 @@ class spect(components):
         self.add_part(self.ax.plot(x, arg, color='k')[0])
 
         self._putname_(self.position[0], self.position[1] - 1.5 * r)
-
-        self.connection_points = [(self.position[0] - r, self.position[1]), (self.position[0] + r, self.position[1])]
