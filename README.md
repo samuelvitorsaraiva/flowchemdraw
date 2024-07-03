@@ -1,2 +1,2 @@
 # flowchem-draw
- System to develop the autoation of chemical laboratory platforms
+ System to develop the automation of chemical laboratory platforms
