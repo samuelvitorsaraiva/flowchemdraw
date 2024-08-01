@@ -1,6 +1,6 @@
 '''
 
-pip install editable .
+pip install -e .
 
 '''
 

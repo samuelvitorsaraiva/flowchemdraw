@@ -20,8 +20,28 @@ classifiers = [
     "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
+    "flowchem",
+    "pyqt5",
+    "matplotlib",
+    "toml",
     "numpy"
+]
+
+[project.optional-dependencies]
+docs = ["furo",
+    "mistune==0.8.4", # Due to sphinx-contrib/openapi#121
+    "myst-parser",
+    "sphinx",
+    "sphinx_design",
+    "sphinx-autodoc-typehints",
+    "sphinx-rtd-theme",
+    "sphinxcontrib-openapi",
 ]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+
+[tool.poetry.dependencies]
+myst-parser = "^0.15.2"  # Check for the latest version
+sphinx_design = "^0.6.0"
+sphinx-rtd-theme = "^1.3.0"
