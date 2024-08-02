@@ -145,9 +145,7 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Volume
       responses:
         '200':
@@ -287,9 +285,7 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Volume
       responses:
         '200':
@@ -360,9 +356,7 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: boolean
+          type: boolean
           default: false
           title: Ambiguous Switching
       requestBody:
@@ -455,9 +449,7 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: boolean
+          type: boolean
           default: false
           title: Ambiguous Switching
       requestBody:
