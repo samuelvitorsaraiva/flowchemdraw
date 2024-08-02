@@ -8,10 +8,10 @@ info:
     url: https://opensource.org/licenses/MIT
   version: 1.0.0a3
 paths:
-  /my-cvc3000/:
+  /fake-device/:
     get:
       tags:
-      - my-cvc3000
+      - fake-device
       summary: Get Device Info
       operationId: get_device_info_fake_device__get
       responses:
@@ -21,11 +21,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeviceInfo'
-  /my-cvc3000/FakeComponent/:
+  /fake-device/FakeComponent/:
     get:
       tags:
-      - my-cvc3000
-      - my-cvc3000
+      - fake-device
+      - fake-device
       summary: Get Component Info
       description: "Retrieve the component's metadata.\n\nThis endpoint provides information\
         \ about the component, such as its name and associated hardware device.\n\n\
@@ -38,11 +38,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ComponentInfo'
-  /my-cvc3000/FakeComponent/fake_send_command:
+  /fake-device/FakeComponent/fake_send_command:
     put:
       tags:
-      - my-cvc3000
-      - my-cvc3000
+      - fake-device
+      - fake-device
       summary: Fake Send Command
       description: "Send a specific command to the some - FakeDevice.\n\nThis function\
         \ demonstrates how the commands can be sent through the API build\n\n    \
@@ -85,11 +85,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-  /my-cvc3000/FakeComponent/fake_receive_data:
+  /fake-device/FakeComponent/fake_receive_data:
     get:
       tags:
-      - my-cvc3000
-      - my-cvc3000
+      - fake-device
+      - fake-device
       summary: Fake Receive Data
       description: 'Receive specific data from the FakeDevice.
 
@@ -115,6 +115,21 @@ paths:
                 type: number
                 title: Response Fake Receive Data Fake Device Fakecomponent Fake Receive
                   Data Get
+  /fake-device/FakeComponent/set_specif_command:
+    put:
+      tags:
+      - fake-device
+      - fake-device
+      summary: Set Specif Command
+      description: "This is an example of a specific command that only this device\
+        \ has!\n\nReturns:\n    None"
+      operationId: set_specif_command_fake_device_FakeComponent_set_specif_command_put
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
 components:
   schemas:
     ComponentInfo:

@@ -5,6 +5,4 @@
 ./explanation-package
 
 ./valve_logic
-
-./code_structure/modules
 ```

@@ -1,5 +1,5 @@
-# Fake Device
+# Fake
 
 ```{eval-rst}
-.. openapi:: ./FakeDevice_yml.yml
+.. openapi:: ./fake_device.yml
 ```
