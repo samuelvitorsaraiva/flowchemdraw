@@ -77,9 +77,7 @@ paths:
         in: query
         required: false
         schema:
-          anyOf:
-          - type: string
-          - type: boolean
+          type: boolean
           default: false
           title: Ambiguous Switching
       requestBody:
