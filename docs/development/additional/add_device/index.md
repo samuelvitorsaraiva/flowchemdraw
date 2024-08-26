@@ -15,10 +15,13 @@ This is to limit the amount dependencies in `flowchem` while enabling support to
 Currently, the only plugin to `flowchem` is [flowchem-test](https://pypi.org/project/flowchem-test/) which adds a
 barebone device type called FakeDevice for use in tests.
 
+[add device real example](example_explained.md)
+
 ```{toctree}
 :maxdepth: 2
 :hidden:
 
 add_to_flowchem
 add_as_plugin
+example_explained
 ```
