@@ -37,7 +37,8 @@ Flowchem creates connections with each device and ensures a reproducible state a
 4. **Multithreading**
 
 Flowchem provides access to the capabilities of each device (such as pumping, heating etc...) via a web interface.
-Flowchem was developed to work with multithreading using the Asynchronous package. This means commands can be sent 
+Flowchem was developed to work with multithreading using the 
+[Asynchronous package](https://docs.python.org/3/library/asyncio.html). This means commands can be sent 
 asynchronously, and each device will run in its own thread. This setup helps prevent the entire system from crashing 
 if an error occurs with one device.
 
@@ -47,7 +48,7 @@ Since flowchem leverages web technologies, flowchem devices can be controlled di
 written in different languages and from almost any operative system, including Android and iOS.
 A set of python clients interfacing with the flowchem API are also provided and used in examples.
 
-We recommend the user have an straightforward immersion to the package to follow the following readings.
+We recommend the user to simply try the package and follow provided material.
 
 1. Follow the instruction to [install](user-guides/tutorials/installation.md) the package;
 2. Read the instructions to create the [configuration file](user-guides/tutorials/configuration.md);
