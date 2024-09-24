@@ -22,6 +22,6 @@ barebone device type called FakeDevice for use in tests.
 :hidden:
 
 add_to_flowchem
-add_as_plugin
+
 example_explained
 ```
