@@ -1,2 +1,0 @@
-# Explanation of the package
-

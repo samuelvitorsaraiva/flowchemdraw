@@ -7,11 +7,13 @@ same kind.
 The valve logic, or better specifically, the rotary valve logic, is based on the device's movement and degree of 
 freedom. The figure above illustrates an example of a valve. The rotary valve has 2 parts. 
 The first part, called stator, is fixed and contains the ports, where the tubes are connected. The second part, 
-called the rotor, is mobile. The rotor can rotate to a specific angle to eastablish a specific connection. 
+called the rotor, is mobile. The rotor can rotate to a specific angle to establish a specific connection through 
+the channels. 
 
 In the figure, the systematic numbering of the nine ports, from 0 to 8, ensures a clear understanding of their relation to 
 the central port. The first port, number 1, is always the highest, and the subsequent ports are numbered in a clockwise
-direction.
+direction. The rotor have two channels, called 9 and 10. The numbers used to represent the channels is always above 
+the number of ports in order to avoid misunderstand.
 
 ![](valve_logic.JPG)
 
@@ -20,7 +22,7 @@ is the list of the available connection ports. The `rotor_ports` is the list of 
 
 ```python
 stator_ports=[(1, 2, 3, 4, 5, 6, 7, 8), (0,)],
-rotor_ports=[(None, None, 10, None, 10, None, None, 9), (9,)]
+rotor_ports=[(None, 10, None, 10, None, None, 9, None), (9,)]
 ```
 
 Observe that the second tuple of both lists correlates with the central port, number zero. The 
@@ -30,20 +32,19 @@ Following the logic, with a rotation of +45 degrees in the rotor, only the `roto
 new configuration, or position B, as illustrated in the figure, will be:
 ```python
 stator_ports=[(1, 2, 3, 4, 5, 6, 7, 8), (0,)],
-rotor_ports=[(9, None, None, 10, None, 10, None, None), (9,)]
+rotor_ports=[(None, None, 10, None, 10, None, None, 9), (9,)]
 ```
-
 
 Position C will be:
 ```python
 stator_ports=[(1, 2, 3, 4, 5, 6, 7, 8), (0,)],
-rotor_ports=[(None, 9, None, None, 10, None, 10, None), (9,)]
+rotor_ports=[(9, None, None, 10, None, 10, None, None), (9,)]
 ```
 And position D is:
 
 ```python
 stator_ports=[(1, 2, 3, 4, 5, 6, 7, 8), (0,)],
-rotor_ports=[(None, None, 9, None, None, 10, None, None), (9,)]
+rotor_ports=[(None, 9, None, None, 10, None, 10, None), (9,)]
 ```
 Imagine if we have a injection valve with 2 positions and 6 ports, as shown above.
 
