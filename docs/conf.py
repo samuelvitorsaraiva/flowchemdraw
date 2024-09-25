@@ -21,7 +21,7 @@ ROOT_DIR = os.path.abspath(os.path.join(CONF_DIR, os.pardir))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 
-project = "flowchemgui"
+project = "flowchemdraw"
 YEAR = datetime.date.today().strftime("%Y")
 author = "Flowchem Lab - MPIKG/MPI"
 copyright = f"{YEAR}, {author}"
@@ -41,10 +41,7 @@ extensions = [
     "sphinxcontrib.httpdomain",
 ]
 
-source_suffix = {
-    '.rst': 'restructuredtext',
-    '.md': 'markdown',
-}
+source_suffix = [".rst", ".md"]
 autodoc_member_order = "bysource"
 
 #autodoc_mock_imports = [os.path.abspath("../flowchem")]

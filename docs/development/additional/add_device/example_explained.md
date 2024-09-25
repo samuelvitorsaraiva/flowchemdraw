@@ -487,7 +487,7 @@ The infuse command is directed to the `set_to_volume` method in the `ML600` clas
 device and syringe size specific plunger speed and position. The command and parameters are packed in `Protocol1Command` class.
 The actual command string is constructed in `HamiltonPumpIO` by calling `Protocol1Command.compile` and written to the serial port.
 
-The code for implementing the ml600 is provided [here](../../foundations/code_structure/flowchem.devices.hamilton.rst)
+The code for implementing the ml600 is provided **here**.
 
 
 
