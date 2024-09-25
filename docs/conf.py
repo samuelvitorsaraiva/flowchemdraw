@@ -68,25 +68,24 @@ myst_enable_extensions = [
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'sphinx_rtd_theme'
-html_static_path = ['_static']
+#html_theme = 'sphinx_rtd_theme'
+#html_static_path = ['_static']
 
 
 # -- Options for HTML output -------------------------------------------------
-# html_logo = "http://placekitten.com/200/90"
-#html_theme = "furo"
-#html_theme_options = {
-#    "light_css_variables": {
-#        "primary-color": "#005555",
-#    },
-#    "dark_css_variables": {
-#        "primary-color": "#e5c07b",
-#    },
-#}
-#html_show_copyright = False
-#html_show_sphinx = False
+html_theme = "furo"
+html_theme_options = {
+    "light_css_variables": {
+        "primary-color": "#005555",
+    },
+    "dark_css_variables": {
+        "primary-color": "#e5c07b",
+    },
+}
+html_show_copyright = False
+html_show_sphinx = False
 
-#html_static_path = ["_static"]
-#html_css_files = [
-#    "flowchem.css",
-#]
+html_static_path = ["_static"]
+html_css_files = [
+    "flowchem.css",
+]
