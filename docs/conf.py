@@ -47,7 +47,7 @@ autodoc_member_order = "bysource"
 #autodoc_mock_imports = [os.path.abspath("../flowchem")]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+#templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 myst_enable_extensions = [
