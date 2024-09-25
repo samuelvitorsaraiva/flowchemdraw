@@ -1,10 +1,10 @@
 # Tools
 
-There are additional tools in Flowchem to help users create the configuration file and utilize the API server.
+There are additional tools in flowchem to help users create the configuration file and utilize the API server.
 
 ## Autodiscover
 
-Some devices implemented in Flowchem can be discovered using the autodiscover function present in Flowchem. To activate
+Some devices implemented in flowchem can be discovered using the autodiscover function present in flowchem. To activate
 this function, simply type the command in the command window.
 
 ```shell
@@ -20,8 +20,26 @@ The autodiscover include modules that involve communication over serial ports. T
 ```
 
 After the examination, a configuration file will be generated with the main characteristics of each identified device.
-It's important to note that additional parameters may require adjustments. However, this feature saves time when 
-creating the configuration file. The file named `flowchem_config.toml` created is placed in the flowchem package folder
+This feature saves time when creating the configuration file. The file named `flowchem_config.toml` created is placed 
+in the flowchem package folder
+
+```{note}
+Some additional information is generally still necessary even for auto-detected devices.
+```
+
+Complete the missing information (if any) in this file, and then you will be ready to use flowchem!
+
+```{note}
+`flowchem_config.toml` is written in [TOML format](https://en.wikipedia.org/wiki/TOML),
+the syntax of this language is intuitive and designed to be human-editable.
+If you follow this guide you will not need to learn anything about the TOML syntax, but you can just copy and modify the
+examples provided.
+```
+
+:::{note}
+Not all the devices supported by flowchem can be auto discovered, so you might need to edit the configuration
+file manually for some device types.
+:::
 
 ## Accessing API
 
