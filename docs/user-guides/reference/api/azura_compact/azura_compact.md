@@ -1,4 +1,6 @@
-# Flowchem - flowchem_config
+# azura_compact
+
+## Flowchem - flowchem_config
 
 **Version:** 0.1.0a3
 **License:** [MIT License](https://opensource.org/licenses/MIT)

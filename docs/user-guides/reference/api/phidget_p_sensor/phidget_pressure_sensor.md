@@ -1,4 +1,6 @@
-# Flowchem - 
+# phidget_pressure_sensor
+
+## Flowchem - 
 
 **Version:** 1.0.0a3
 **License:** [MIT License](https://opensource.org/licenses/MIT)

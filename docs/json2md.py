@@ -9,9 +9,14 @@ def openapi_json_to_markdown(json_path: str, output_md_path: str):
 
     lines = []
 
+    # Use the filename (without .md) as the main header
+    filename_without_ext = os.path.splitext(os.path.basename(output_md_path))[0]
+    lines.append(f"# {filename_without_ext}")
+    lines.append("")
+
     # Info
     info = data.get('info', {})
-    lines.append(f"# {info.get('title', 'API')}")
+    lines.append(f"## {info.get('title', 'API')}")
     lines.append("")
     lines.append(f"**Version:** {info.get('version', '')}")
     license = info.get("license", {})
