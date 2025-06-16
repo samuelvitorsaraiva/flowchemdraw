@@ -1,5 +1,3 @@
-# r4_heater
-
 ## Endpoints
 
 ### `GET /my-h4heater/`

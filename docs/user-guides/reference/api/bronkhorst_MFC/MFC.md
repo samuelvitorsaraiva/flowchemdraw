@@ -1,5 +1,3 @@
-# MFC
-
 ## Endpoints
 
 ### `GET /my-MFC/`

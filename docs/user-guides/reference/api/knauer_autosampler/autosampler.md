@@ -1,5 +1,3 @@
-# autosampler
-
 ## Endpoints
 
 ### `GET /my-knauer-autosampler/`

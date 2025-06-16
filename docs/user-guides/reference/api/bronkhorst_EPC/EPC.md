@@ -1,5 +1,3 @@
-# EPC
-
 ## Endpoints
 
 ### `GET /my-EPC/`

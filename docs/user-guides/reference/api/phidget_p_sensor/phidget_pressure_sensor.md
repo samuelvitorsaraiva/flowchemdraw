@@ -1,5 +1,3 @@
-# phidget_pressure_sensor
-
 ## Endpoints
 
 ### `GET /my-phidgetPressure/`

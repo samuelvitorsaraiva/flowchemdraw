@@ -1,5 +1,3 @@
-# clarity
-
 ## Endpoints
 
 ### `GET /my-clarity/`

@@ -1,5 +1,3 @@
-# azura_compact
-
 ## Endpoints
 
 ### `GET /pump-b90e33/pump/`

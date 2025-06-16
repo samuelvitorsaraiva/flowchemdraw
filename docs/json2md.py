@@ -8,12 +8,6 @@ def openapi_json_to_markdown(json_path: str, output_md_path: str):
         data = json.load(f)
 
     lines = []
-
-    # Use the filename (without .md) as the main header
-    filename_without_ext = os.path.splitext(os.path.basename(output_md_path))[0]
-    lines.append(f"# {filename_without_ext}")
-    lines.append("")
-
     # Paths
     lines.append("## Endpoints\n")
     for path, methods in data.get('paths', {}).items():

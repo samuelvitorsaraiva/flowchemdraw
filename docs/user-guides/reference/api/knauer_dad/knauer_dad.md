@@ -1,5 +1,3 @@
-# knauer_dad
-
 ## Endpoints
 
 ### `GET /my-knauerdad/`

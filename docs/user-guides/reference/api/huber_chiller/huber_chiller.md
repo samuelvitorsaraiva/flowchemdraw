@@ -1,5 +1,3 @@
-# huber_chiller
-
 ## Endpoints
 
 ### `GET /my-chiller/`

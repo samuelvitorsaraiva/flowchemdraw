@@ -1,5 +1,3 @@
-# elite11
-
 ## Endpoints
 
 ### `GET /my-elite11/`

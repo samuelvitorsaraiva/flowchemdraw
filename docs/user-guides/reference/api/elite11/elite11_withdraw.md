@@ -1,5 +1,3 @@
-# elite11_withdraw
-
 ## Endpoints
 
 ### `GET /my-elite11/`

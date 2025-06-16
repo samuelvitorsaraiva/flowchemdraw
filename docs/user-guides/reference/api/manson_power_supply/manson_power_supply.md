@@ -1,5 +1,3 @@
-# manson_power_supply
-
 ## Endpoints
 
 ### `GET /my-mansonpower/`

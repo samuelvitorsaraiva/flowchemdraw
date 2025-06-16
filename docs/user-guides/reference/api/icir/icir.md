@@ -1,5 +1,3 @@
-# icir
-
 ## Endpoints
 
 ### `GET /my-icir/`
