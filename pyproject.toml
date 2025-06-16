@@ -140,13 +140,8 @@ docs = [
 ]
 
 [project.urls]
-homepage = "https://github.com/cambiegroup/flowchem"
-documentation = "https://flowchem.readthedocs.io"
-repository = "https://github.com/cambiegroup/flowchem"
-
-[project.scripts]
-flowchem = "flowchem.__main__:main"
-flowchem-autodiscover = "flowchem.utils.device_finder:main"
+homepage = "https://github.com/samuelvitorsaraiva/flowchemdraw"
+repository = "https://github.com/samuelvitorsaraiva/flowchemdraw"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
@@ -155,7 +150,7 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-flowchem = ["py.typed"]
+flowchemdraw = ["py.typed"]
 
 [tool.mypy]
 ignore_missing_imports = true
