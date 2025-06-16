@@ -1,14 +1,12 @@
-# Flowchem
-
 :::{figure-md} flowchem
 <img src="_static/flowchem_logo.svg" alt="Flowchem" class="bg-primary mb-1" width="100%">
 
-Flowchem is an application to simplify the control of instruments and devices commonly found in chemistry labs.
-Flowchem acts as unifying layer exposing devices using different command syntax and protocols under a single API.
+Flowchem is an application to simplify the control of instruments and devices commonly found in chemistry labs. Flowchem acts as a unifying layer exposing devices using different command syntax and protocols under a single API.
+:::
 
-::::{grid} 1 2 3 4
+::::{grid}
 
-:::{grid-row}
+:::{grid-item}
 :columns: auto
 
 ```{button-ref} getting_started
@@ -16,7 +14,7 @@ Flowchem acts as unifying layer exposing devices using different command syntax 
 :tooltip: Getting started guide
 ```
 :::
-:::{grid-row}
+:::{grid-item}
 :columns: auto
 
 ```{button-ref} /user-guides/How-ToGuide/index
@@ -24,7 +22,7 @@ Flowchem acts as unifying layer exposing devices using different command syntax 
 :tooltip: How-ToGuides - oriented practical steps
 ```
 :::
-:::{grid-row}
+:::{grid-item}
 :columns: auto
 
 ```{button-ref} /user-guides/tutorials/index
@@ -32,7 +30,7 @@ Flowchem acts as unifying layer exposing devices using different command syntax 
 :tooltip: Introductory tutorial - learning-oriented practical steps
 ```
 :::
-:::{grid-row}
+:::{grid-item}
 :columns: auto
 
 ```{button-ref} /user-guides/reference/index
@@ -40,7 +38,7 @@ Flowchem acts as unifying layer exposing devices using different command syntax 
 :tooltip: Reference - information to research
 ```
 :::
-:::{grid-row}
+:::{grid-item}
 :columns: auto
 
 ```{button-ref} /user-guides/explanation/index
@@ -48,7 +46,7 @@ Flowchem acts as unifying layer exposing devices using different command syntax 
 :tooltip: API reference - information-oriented theoretical knowledge
 ```
 :::
-:::{grid-row}
+:::{grid-item}
 :columns: auto
 
 ```{button-ref} /user-guides/examples/reaction_optimization
@@ -57,6 +55,7 @@ Flowchem acts as unifying layer exposing devices using different command syntax 
 ```
 :::
 ::::
+
 
 ## Contents
 ```{toctree}
