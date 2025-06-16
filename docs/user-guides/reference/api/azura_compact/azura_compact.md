@@ -1,14 +1,5 @@
 # azura_compact
 
-## Flowchem - flowchem_config
-
-**Version:** 0.1.0a3
-**License:** [MIT License](https://opensource.org/licenses/MIT)
-
-Flowchem is a python library to control a variety of instruments commonly found in chemistry labs.
-
----
-
 ## Endpoints
 
 ### `GET /pump-b90e33/pump/`

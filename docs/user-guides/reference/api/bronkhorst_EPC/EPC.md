@@ -1,14 +1,5 @@
 # EPC
 
-## Flowchem - 
-
-**Version:** 1.0.0a3
-**License:** [MIT License](https://opensource.org/licenses/MIT)
-
-Flowchem is a library to control instruments and devices commonly found in chemistry labs via an interoperable web API.
-
----
-
 ## Endpoints
 
 ### `GET /my-EPC/`
