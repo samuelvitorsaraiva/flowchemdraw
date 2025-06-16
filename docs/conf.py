@@ -32,7 +32,7 @@ project = "flowchemdraw"
 YEAR = datetime.date.today().strftime("%Y")
 author = "Dario Cambié, Jakob Wolf, Wei-Hsin Hsu, Samuel Saraiva"
 copyright = f"{YEAR}, {author}"
-release = metadata.version("flowchem")
+release = metadata.version("flowchemdraw")
 
 # -- General configuration ---------------------------------------------------
 extensions = [
